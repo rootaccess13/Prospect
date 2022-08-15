@@ -75,17 +75,4 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.ign)
-        from PIL import Image as Img
-        from io import StringIO
-        import io
-        import sys
-        from django.core.files.uploadedfile import InMemoryUploadedFile
-        if self.avatar:
-            image = Img.open(io.BytesIO(self.avatar.read()))
-            image.thumbnail((600, 600), Img.ANTIALIAS)
-            output = io.BytesIO()
-            image.save(output, format='PNG')
-            output.seek(0)
-            self.avatar = InMemoryUploadedFile(output, 'ImageField', "%s.png" % self.avatar.name.split('.')[0], 'image/png',
-                                               sys.getsizeof(output), None)
-        return super(CustomUser, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
