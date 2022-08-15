@@ -1,0 +1,7 @@
+{% extends "index/_base.html" %}
+{% load hitcount_tags %}
+
+
+{% block content %}
+<p>Views: {% get_hit_count for userinfos %}</p>
+{% endblock %}
