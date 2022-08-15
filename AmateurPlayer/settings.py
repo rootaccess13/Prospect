@@ -2,14 +2,14 @@
 
 import os
 from pathlib import Path
-import django_heroku
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-63*=$rn1*&9*z!cmn0=t-0jiy-q!n9dz3!o@tiv+t3g^j6#2$q'
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['amateurprospect.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['amateurprospect.herokuapp.com/', '127.0.0.1']
 
 
 INSTALLED_APPS = [
@@ -137,6 +137,7 @@ LOGGING = {
 }
 
 DEBUG_PROPAGATE_EXCEPTIONS = True
+
 LOGIN_URL = '/'
 CSRF_TRUSTED_ORIGINS = [
     "http://0.0.0.0",
@@ -148,6 +149,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
@@ -164,6 +168,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'tena.m.bsinfotech@gmail.com'
 EMAIL_HOST_PASSWORD = 'lwegzcmioztymzfc'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AWS_ACCESS_KEY_ID = "AKIATUTGCKKNBNBEEVX5"
