@@ -155,6 +155,8 @@ STATICFILES_DIRS = [
 COMPRESS_ROOT = BASE_DIR / 'staticfiles'
 
 COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True
+
 
 STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
