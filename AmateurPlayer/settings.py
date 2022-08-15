@@ -9,7 +9,7 @@ SECRET_KEY = 'django-insecure-63*=$rn1*&9*z!cmn0=t-0jiy-q!n9dz3!o@tiv+t3g^j6#2$q
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['amateurprospect.herokuapp.com/', '127.0.0.1']
+ALLOWED_HOSTS = ['amateurprospect.herokuapp.com', '127.0.0.1']
 
 
 INSTALLED_APPS = [
@@ -143,7 +143,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://0.0.0.0",
     "http://localhost",
     "http://127.0.0.1",
-    "https://ab00-130-105-31-38.jp.ngrok.io"
+    "https://amateurprospect.herokuapp.com",
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
