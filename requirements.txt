@@ -20,3 +20,5 @@ django-filter==2.00
 django-utils-six==2.0
 Pillow
 django-hitcount
+boto3
+django-storages
