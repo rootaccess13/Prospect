@@ -9,7 +9,7 @@ SECRET_KEY = 'django-insecure-63*=$rn1*&9*z!cmn0=t-0jiy-q!n9dz3!o@tiv+t3g^j6#2$q
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['ab00-130-105-31-38.jp.ngrok.io', '127.0.0.1']
+ALLOWED_HOSTS = ['amateurprospect.herokuapp.com', '127.0.0.1']
 
 
 INSTALLED_APPS = [
