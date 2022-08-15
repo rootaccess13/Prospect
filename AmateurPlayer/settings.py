@@ -2,6 +2,7 @@
 
 import os
 from pathlib import Path
+import django_heroku
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -126,4 +127,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'tena.m.bsinfotech@gmail.com'
 EMAIL_HOST_PASSWORD = 'lwegzcmioztymzfc'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+django_heroku.settings(locals())
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
