@@ -32,6 +32,7 @@ from hitcount.views import HitCountDetailView
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 from accounts.forms import AvatarForm
+from django.conf import settings
 
 
 def signup(request):
@@ -85,6 +86,7 @@ def signin(request):
             return redirect('index')
     context = {
         'userdata': userdataobjects,
+        'COMPRESS_ROOT': settings.COMPRESS_ROOT,
     }
     return render(request, 'index/index.html', context)
 

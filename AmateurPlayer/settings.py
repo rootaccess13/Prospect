@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-
+import django_heroku
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-63*=$rn1*&9*z!cmn0=t-0jiy-q!n9dz3!o@tiv+t3g^j6#2$q'
@@ -177,5 +177,5 @@ AWS_S3_REGION_NAME = 'ap-southeast-1'
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_S3_ADDRESSING_STYLE = 'virtual'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
+django_heroku.settings(locals())
 CORS_ORIGIN_ALLOW_ALL = True
