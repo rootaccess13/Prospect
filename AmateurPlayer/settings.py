@@ -3,6 +3,8 @@
 import os
 from pathlib import Path
 import django_heroku
+
+from .test import COMPRESS_ROOT, MEDIA_ROOT, STATIC_ROOT
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-63*=$rn1*&9*z!cmn0=t-0jiy-q!n9dz3!o@tiv+t3g^j6#2$q'
@@ -143,21 +145,25 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1",
     "https://amateurprospect.herokuapp.com",
 ]
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
-
-COMPRESS_ROOT = BASE_DIR / 'staticfiles'
-
+COMPRESS_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+COMPRESS_URL = '/static/'
 COMPRESS_ENABLED = True
-COMPRESS_OFFLINE = True
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+]
+COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', False)
 
-STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
@@ -177,6 +183,7 @@ AWS_DEFAULT_ACL = None
 AWS_S3_REGION_NAME = 'ap-southeast-1'
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_S3_ADDRESSING_STYLE = 'virtual'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 django_heroku.settings(locals())
 CORS_ORIGIN_ALLOW_ALL = True
