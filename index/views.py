@@ -90,7 +90,7 @@ def signin(request):
     return render(request, 'index/index.html', context)
 
 
-def followToggle(request, pk):
+def followToggle(request, pk, loggedinuser):
     user = CustomUser.objects.get(pk=pk)
     if request.user in user.follower.all():
         user.follower.remove(request.user)
