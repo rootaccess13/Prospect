@@ -4,4 +4,5 @@
 
 {% block content %}
 <p>Views: {% get_hit_count for userinfos %}</p>
+<a href="{{userinfos.get_absolute_url }}">Link</a>
 {% endblock %}

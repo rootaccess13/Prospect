@@ -55,7 +55,7 @@
                 {% for data in userdata %}
                     {% if data.gametype == 'valorant' %}
                     <div>
-                        <a href="{% url 'userinfo' data.slug %}" data-popover-target="{{data.gametype}}{{data.ign}}" data-popover-placement="bottom" data-popover-trigger="hover" class="flex flex-col p-2 items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-sm hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                        <a href="{{data.get_absolute_url}}" data-popover-target="{{data.gametype}}{{data.ign}}" data-popover-placement="bottom" data-popover-trigger="hover" class="flex flex-col p-2 items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-sm hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
                             <img class="object-cover w-28 rounded-lg md:h-auto md:w-24 md:rounded-none md:rounded-l-lg" src="{{data.avatar.url}}" alt="">
                             <div class="flex flex-col justify-between sm:py-2 px-4 leading-normal content-center w-full">
                                     <h5 class="mb-2 font-bold tracking-tight text-gray-900 dark:text-white md:text-start sm:text-center sm:text-sm md:text-2xl lg:text-base">
@@ -83,7 +83,16 @@
                                 </a>
                                 
                                 <div>
-                                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Follow</button>
+                                    {% if user.is_authenticated %}
+                                    {% if user in data.follower.all %}
+                                        <a href="{% url 'followtoggle' pk=data.pk  %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Unfollow</a>
+                                    {% else %}
+                                        <a  href="{% url 'followtoggle' pk=data.pk  %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"> Follow </a>
+                                    {% endif %}
+                                {% else %}
+                                    <p class="text-muted"> please, login to follow </p>
+                                {% endif %}
+                                    <!-- <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Follow</button> -->
                                 </div>
                             </div>
                             <p class="text-base flex font-semibold leading-none text-gray-900 dark:text-white items-center">
@@ -115,7 +124,7 @@
                                 </li>
                                 <li>
                                     <a href="#" class="hover:underline">
-                                        <span class="font-semibold text-gray-900 dark:text-white">3,758</span>
+                                        <span class="font-semibold text-gray-900 dark:text-white">{{data.follower.count}}</span>
                                         <span>Followers</span>
                                     </a>
                                 </li>

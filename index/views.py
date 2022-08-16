@@ -1,4 +1,5 @@
 from decimal import Context
+import email
 from itertools import count
 from multiprocessing import context
 from django.contrib.auth import login, authenticate, logout
@@ -89,6 +90,15 @@ def signin(request):
     return render(request, 'index/index.html', context)
 
 
+def followToggle(request, pk):
+    user = CustomUser.objects.get(pk=pk)
+    if request.user in user.follower.all():
+        user.follower.remove(request.user)
+    else:
+        user.follower.add(request.user)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
 def logout_view(request):
     logout(request)
     return redirect('index')
@@ -125,7 +135,7 @@ def activate(request, uidb64, token):
         return render(request, 'accounts/activation_invalid.html')
 
 
-@lr
+@ lr
 def completeProfile(request, pk):
     user = get_object_or_404(CustomUser, pk=pk)
     if request.user.pk == user.pk:

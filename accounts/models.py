@@ -1,3 +1,4 @@
+import email
 from email.policy import default
 from django.db import models
 from django.contrib.auth.models import BaseUserManager
@@ -9,8 +10,7 @@ from hitcount.models import HitCountMixin, HitCount
 from django.contrib.contenttypes.fields import GenericRelation
 from django.utils.text import slugify
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from PIL import Image as Img
-import io
+from django.urls import reverse
 
 
 class CustomUserManager(BaseUserManager):
@@ -54,6 +54,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     gametype = models.CharField(max_length=50, blank=True, null=True)
     gamerole = models.CharField(max_length=50, blank=True, null=True)
     formerteam = models.CharField(max_length=50, blank=True, null=True)
+    follower = models.ManyToManyField(
+        "self", blank=True, symmetrical=False, related_name='prodpect_followers')
+    following = models.ManyToManyField(
+        "self", blank=True, symmetrical=False, related_name='prodpect_following')
     hit_count_generic = GenericRelation(
         HitCount, object_id_field='object_pk', related_query_name='hit_count_generic_relation')
     slug = models.SlugField(unique=True, max_length=100, blank=True, null=True)
@@ -76,3 +80,27 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         if not self.slug:
             self.slug = slugify(self.ign)
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('userinfo', args=[self.slug])
+
+    def get_avatar(self):
+        return self.avatar.url
+
+    def get_gametype(self):
+        return self.gametype
+
+    def get_gamerole(self):
+        return self.gamerole
+
+    def get_formerteam(self):
+        return self.formerteam
+
+    def unfollow(self, user):
+        self.following.remove(user)
+
+    def follow(self, user):
+        self.following.add(user)
+
+    def check_follow(self, user):
+        return self.following.filter(pk=user.pk).exists()
