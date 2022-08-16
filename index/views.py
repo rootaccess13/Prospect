@@ -70,9 +70,7 @@ def signup(request):
 
 
 def signin(request):
-    # Get CustomUser object except for staff users
     userdata = CustomUser.objects.exclude(is_staff=True)
-    # get 10 objects from CustomUser object
     userdataobjects = userdata[:10]
     if request.method == 'POST':
         email = request.POST['email'].lower()
@@ -101,15 +99,7 @@ class UserDetailView(HitCountDetailView, View):
     template_name = 'accounts/profile_view.html'
     context_object_name = 'userinfos'
     slug_field = 'slug'
-    # set to True to count the hit
     count_hit = True
-
-    # def get_context_data(self, **kwargs):
-    #     context = super(UserDetailView, self).get_context_data(**kwargs)
-    #     context.update({
-    #         'popular_posts': CustomUser.objects.order_by('-hit_count_generic__hits')[:3],
-    #     })
-    #     return context
 
 
 def activation_sent_view(request):
@@ -138,20 +128,22 @@ def activate(request, uidb64, token):
 @lr
 def completeProfile(request, pk):
     user = get_object_or_404(CustomUser, pk=pk)
-
-    if request.method == 'POST':
-        avatarform = AvatarForm(request.POST or None,
-                                request.FILES or None, instance=user)
-        if avatarform.is_valid():
-            user.gamerole = request.POST['gamerole']
-            user.gametype = request.POST['gametype']
-            user.formerteam = request.POST['formerteam']
-            user.save()
-            avatarform.save()
-            return redirect('index')
+    if request.user.pk == user.pk:
+        if request.method == 'POST':
+            avatarform = AvatarForm(request.POST or None,
+                                    request.FILES or None, instance=user)
+            if avatarform.is_valid():
+                user.gamerole = request.POST['gamerole']
+                user.gametype = request.POST['gametype']
+                user.formerteam = request.POST['formerteam']
+                user.save()
+                avatarform.save()
+                return redirect('index')
+        else:
+            avatarform = AvatarForm(instance=user)
+        return render(request, 'accounts/complete_profile.html', {'avatarform': avatarform, 'user': user})
     else:
-        avatarform = AvatarForm(instance=user)
-    return render(request, 'accounts/complete_profile.html', {'avatarForm': avatarform, 'user': user})
+        raise Http404
 
 
 def success(request):

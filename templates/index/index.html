@@ -3,6 +3,7 @@
 
 {% block content %}
 
+<div class="container mx-auto">
     <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
             <li class="mr-2" aria-selected="false" role="presentation">
@@ -279,7 +280,7 @@
                     {% if data.gametype == 'pubg' %}
                     <div>
                         <a href="#" class="flex flex-col items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-sm hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-                            <img class="object-cover w-28 rounded-t-lg md:h-auto md:w-24 md:rounded-none md:rounded-l-lg" src="https://i.imgur.com/XJqWDgr.png" alt="">
+                            <img class="object-cover w-28 rounded-t-lg md:h-auto md:w-24 md:rounded-none md:rounded-l-lg" src="{{data.avatar.url}}" alt="">
                             <div class="flex flex-col justify-between p-4 leading-normal">
                                 <h5 class="mb-2 font-bold tracking-tight text-gray-900 dark:text-white md:text-start sm:text-center sm:text-base md:text-2xl"><span class="mx-2 text-yellow-400 sm:text-center sm:text-base md:text-2xl">{{data.formerteam}}</span>{{data.ign}}</h5>
                                 <!-- <p class="mb-3 font-normal text-left text-center text-gray-700 dark:text-gray-400 sm:text-xs md:text-base md:text-start">Top Jungle prospect from Metro Manila.</p> -->
@@ -422,6 +423,8 @@
             </div>
         </div>        
     </div>
+</div>
+
     
     
 {% endblock content %}
