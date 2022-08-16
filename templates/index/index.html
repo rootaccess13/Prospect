@@ -55,7 +55,7 @@
                 {% for data in userdata %}
                     {% if data.gametype == 'valorant' %}
                     <div>
-                        <a href="{{data.get_absolute_url}}" data-popover-target="{{data.gametype}}{{data.ign}}" data-popover-placement="bottom" data-popover-trigger="hover" class="flex flex-col p-2 items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-sm hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                        <a href="#" data-popover-target="{{data.gametype}}{{data.ign}}" data-popover-placement="bottom" data-popover-trigger="click" class="flex flex-col p-2 items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-sm hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
                             <img class="object-cover w-28 rounded-lg md:h-auto md:w-24 md:rounded-none md:rounded-l-lg" src="{{data.avatar.url}}" alt="">
                             <div class="flex flex-col justify-between sm:py-2 px-4 leading-normal content-center w-full">
                                     <h5 class="mb-2 font-bold tracking-tight text-gray-900 dark:text-white md:text-start sm:text-center sm:text-sm md:text-2xl lg:text-base">
@@ -78,7 +78,7 @@
                     <div id="{{data.gametype}}{{data.ign}}" role="tooltip" class="inline-block absolute invisible z-10 w-64 text-sm font-light text-gray-500 bg-white rounded-lg border-2 border-gray-200 shadow-sm opacity-0 transition-opacity duration-300 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600">
                         <div class="p-3">
                             <div class="flex justify-between items-center mb-2">
-                                <a href="#">
+                                <a href="{{data.get_absolute_url}}">
                                     <img class="w-10 h-10 rounded-full" src="{{data.avatar.url}}" alt="Jese Leos">
                                 </a>
                                 
@@ -96,7 +96,7 @@
                                 </div>
                             </div>
                             <p class="text-base flex font-semibold leading-none text-gray-900 dark:text-white items-center">
-                                <a href="#" class="p-px">{{data.ign}}</a>
+                                <a href="{{data.get_absolute_url}}" class="p-px hover:underline">{{data.ign}}</a>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                 </svg>
