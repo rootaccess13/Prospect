@@ -9,8 +9,9 @@
     <div class="grid grid-cols-1 my-9 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 sm:w-full overflow-hidden">
         <div id="game" class="flex flex-col sm:items-center md:items-start lg:items-start lg:py-2 lg:px-2 px-2 py-2 rounded-lg border shadow-md md:flex-row md:max-w-2xl w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
             <div class="flex flex-col content-start p-2 rounded dark:bg-gray-600 mx-2 my-2">
-                <img class="object-cover rounded-lg md:h-auto md:rounded-none md:rounded-l-lg content-center" src="{{userinfos.avatar.url}}" style="width: 180px;" alt="">
+                <img class="object-cover rounded-lg md:h-auto md:rounded-none md:rounded-l-lg content-center w-60 sm:w-64 md:w-60 lg:w-60" src="{{userinfos.avatar.url}}" alt="">
             </div>
+            
             <div class="flex flex-col justify-center sm:py-2 px-2 leading-normal content-center w-full">
                 <div class="mb-2 rounded p-2 dark:bg-gray-600">
                     <label for="first_name" class="block mb-2 text-sm font-medium text-yellow-900 dark:text-yellow-300">
@@ -18,27 +19,36 @@
                     </label>
                     <input type="text" value="{{userinfos.ign}}" disabled id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" required>
                 </div>
-            <div class="inline-flex p-2 items-center justify-center rounded dark:bg-gray-600">
-                <div class="mr-2">
-                    <label for="roles" class="block mb-2 text-sm font-medium text-yellow-900 dark:text-yellow-300">Role</label>
-                    <input type="text" value="{{userinfos.gamerole}}" disabled id="roles" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" required>
+                <div class="inline-flex p-2 items-center justify-center rounded dark:bg-gray-600">
+                    <div class="mr-2">
+                        <label for="roles" class="block mb-2 text-sm font-medium text-yellow-900 dark:text-yellow-300">Role</label>
+                        <input type="text" value="{{userinfos.gamerole}}" disabled id="roles" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" required>
+                    </div>
+                    <div>
+                        <label for="formerteam" class="block mb-2 text-sm font-medium text-yellow-900 dark:text-yellow-300">Team</label>
+                        <input type="text" value="{{userinfos.formerteam}}" disabled id="formerteam" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" required>
+                    </div>
                 </div>
-                <div>
-                    <label for="formerteam" class="block mb-2 text-sm font-medium text-yellow-900 dark:text-yellow-300">Team</label>
-                    <input type="text" value="{{userinfos.formerteam}}" disabled id="formerteam" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" required>
-                </div>
-            </div>
-            <div class="inline-flex items-center justify-center mx-auto">
+            <div class="inline-flex items-center justify-center dark:bg-gray-600 rounded mt-2">
                 {% if userinfos.gametype == 'valorant' %}
-                <div>
-                    <img src="https://i.imgur.com/DAqnrMC.png" class="w-24 ml-2" alt="">
+                <div class="p-2 rounded dark:bg-gray-600 m-2">
+                    <img src="https://i.imgur.com/DAqnrMC.png" class="w-16 w-auto" alt="">
                 </div>
-                <div>
-                    <img src="https://static.wikia.nocookie.net/valorant/images/7/77/InitiatorClassSymbol.png" class="w-4 h-4 items-center ml-px" alt="">
+                <div class="p-2 rounded dark:bg-gray-600 m-2">
+                    <img src="https://static.wikia.nocookie.net/valorant/images/7/77/InitiatorClassSymbol.png" class="w-16 items-center w-auto" alt="">
                 </div>
                 {% endif %}
+                <div class="flex flex-row grid-cols-2 p-2 rounded m-2 w-auto">
+                    <div class="m-2">
+                        <h5 class="flex text-xs text-yellow-300">Followers</h5>
+                        <h5 class="flex text-xs text-yellow-300">1923</h5>
+                    </div>
+                    <div class="m-2">
+                        <h5 class="flex text-xs">Followers</h5>
+                    </div>
+                </div>
             </div>
-        </div>
+            </div>
         </div>
     </div>
 </div>
