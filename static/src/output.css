@@ -2659,6 +2659,11 @@ input:checked + .toggle-bg {
     margin-right: 0.5rem;
   }
 
+  .sm\:mx-4 {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
   .sm\:flex {
     display: flex;
   }
