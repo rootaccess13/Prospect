@@ -6,38 +6,37 @@
 <!-- <p>Views: {% get_hit_count for userinfos %}</p>
 <a href="{{userinfos.get_absolute_url }}">Link</a> -->
 <div class="container mx-auto">
-    <div class="grid grid-cols-1 my-9 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 sm:w-full overflow-hidden">
-        <div id="gameview" class="flex flex-col items-start p-2 md:bg-hero-pattern rounded-lg  shadow-md md:flex-row lg:max-w-xl w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-            <div class="grid grid-cols-1 gap-6 p-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 sm:w-full overflow-hidden">
-                <div id="game" class="flex flex-col items-center lg:py-2 lg:px-2 px-2 py-2 rounded-lg border shadow-md md:flex-row md:max-w-lg w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-                    <img class="object-cover rounded-lg md:h-auto md:rounded-none md:rounded-l-lg content-center" src="{{userinfos.avatar.url}}" style="width: 150px;" alt="">
-                    <div class="flex flex-col justify-center sm:py-2 px-4 leading-normal content-center w-full">
-                        <h5 class="mb-2 font-bold tracking-wide text-gray-900 dark:text-white md:text-center sm:text-center md:text-center lg:text-center sm:text-xs  md:text-2xl lg:text-base overflow-hidden">
-                            <span class="bg-yellow-200 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900">ID# : </span>
-
-                            <span class="text-yellow-400 sm:text-center lg:text-center sm:text-sm md:text-2xl lg:text-base items-center">
-                                {{userinfos.formerteam | default_if_none:''}}</span>
-                                <span class="ml-px text-center">
-                                    {{userinfos.ign}}
-                                </span></h5>
-                    <!-- <p class="mb-3 font-normal text-left text-center text-gray-700 dark:text-gray-400 sm:text-xs md:text-base md:text-start">Top Jungle prospect from Metro Manila.</p> -->
-                    <div class="inline-flex items-center justify-center">
-                        {% if userinfos.gametype == 'valorant' %}
-                            <img src="https://i.imgur.com/DAqnrMC.png" style="max-width: 60px;margin-left: 2px;" alt="">
-                            <img src="https://static.wikia.nocookie.net/valorant/images/7/77/InitiatorClassSymbol.png" class="w-4 h-4 items-center ml-px" alt="">
-                        {% endif %}
-                    </div>
-                    
-                </div>
-                </div>
-                <!-- <div id="teamroles" class="flex flex-col items-center lg:py-2 lg:px-2 px-2 py-2 bg-no-repeat bg-center bg-cover rounded-lg border shadow-md md:flex-row md:max-w-lg w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-                </div> -->
-                <!-- <div class="flex flex-col items-center py-14 px-14 bg-ml-view bg-no-repeat bg-center bg-cover rounded-lg border shadow-md md:flex-row md:max-w-lg w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-                </div>
-                <div class="flex flex-col items-center py-14 px-14 bg-ml-view bg-no-repeat bg-center bg-cover rounded-lg border shadow-md md:flex-row md:max-w-lg w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-                </div> -->
+    <div class="grid grid-cols-1 my-9 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 sm:w-full overflow-hidden">
+        <div id="game" class="flex flex-col items-center lg:py-2 lg:px-2 px-2 py-2 rounded-lg border shadow-md md:flex-row md:max-w-2xl w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+            <div class="p-2 rounded dark:bg-gray-600 mx-2">
+                <img class="object-cover rounded-lg md:h-auto md:rounded-none md:rounded-l-lg content-center" src="{{userinfos.avatar.url}}" style="width: 180px;" alt="">
             </div>
+            <div class="flex flex-col justify-center sm:py-2 px-4 leading-normal content-center w-full">
+                <div class="mb-2 rounded p-2 dark:bg-gray-600">
+                    <label for="first_name" class="block mb-2 text-sm font-medium text-yellow-900 dark:text-yellow-300">
+                        IGN
+                    </label>
+                    <input type="text" value="{{userinfos.ign}}" disabled id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" required>
+                </div>
+            <div class="inline-flex p-2 items-center justify-center rounded dark:bg-gray-600">
+                <div class="mr-2">
+                    <label for="roles" class="block mb-2 text-sm font-medium text-yellow-900 dark:text-yellow-300">Role</label>
+                    <input type="text" value="{{userinfos.gamerole}}" disabled id="roles" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" required>
+                </div>
+                <div>
+                    <label for="formerteam" class="block mb-2 text-sm font-medium text-yellow-900 dark:text-yellow-300">Team</label>
+                    <input type="text" value="{{userinfos.formerteam}}" disabled id="formerteam" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" required>
+                </div>
+            </div>
+            <div class="inline-flex items-center justify-center mx-auto">
+                {% if userinfos.gametype == 'valorant' %}
+                    <img src="https://i.imgur.com/DAqnrMC.png" style="max-width: 60px;margin-left: 2px;" alt="">
+                    <img src="https://static.wikia.nocookie.net/valorant/images/7/77/InitiatorClassSymbol.png" class="w-4 h-4 items-center ml-px" alt="">
+                {% endif %}
+            </div>
+        </div>
         </div>
     </div>
 </div>
+
 {% endblock %}
