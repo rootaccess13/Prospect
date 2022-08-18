@@ -2654,6 +2654,11 @@ input:checked + .toggle-bg {
 }
 
 @media (min-width: 320px) {
+  .sm\:mx-2 {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+
   .sm\:flex {
     display: flex;
   }
@@ -2676,6 +2681,12 @@ input:checked + .toggle-bg {
 
   .sm\:w-64 {
     width: 16rem;
+  }
+
+  .sm\:w-max {
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
   }
 
   .sm\:grid-cols-1 {
@@ -2760,6 +2771,11 @@ input:checked + .toggle-bg {
 
   .md\:order-1 {
     order: 1;
+  }
+
+  .md\:mx-4 {
+    margin-left: 1rem;
+    margin-right: 1rem;
   }
 
   .md\:mr-2 {
