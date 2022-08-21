@@ -34,6 +34,9 @@ from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 from accounts.forms import AvatarForm
 from django.conf import settings
+import random
+from django.utils.http import urlsafe_base64_encode
+import urllib.parse
 
 
 def signup(request):
@@ -97,6 +100,22 @@ def followToggle(request, pk, loggedinuser):
     else:
         user.follower.add(request.user)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def oauthtiktok(request):
+    # Math.random().toString(36).substring(2)
+    csrf_state = request.GET.get('csrfmiddlewaretoken')
+    params = {
+        'client_key': 'awf17r3fssnrj8za',
+        'redirect_uri': 'https://samateurprospect.herokuapp.com/',
+        'response_type': 'code',
+        'scope': 'user.info.basic',
+        'state': csrf_state,
+    }
+    url = 'https://tiktok.com/oauth/authorize?client_key={client_key}&redirect_uri={redirect_uri}&response_type={response_type}&scope={scope}&state={state}'.format(
+        **params)
+    print(url)
+    return redirect(url)
 
 
 def logout_view(request):

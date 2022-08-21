@@ -5,6 +5,8 @@
 {% block content %}
 <!-- <p>Views: {% get_hit_count for userinfos %}</p>
 <a href="{{userinfos.get_absolute_url }}">Link</a> -->
+<div class="container mx-auto">
+    
     <div class="grid grid-cols-1 my-9 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 sm:w-full overflow-hidden">
         <div id="game" class="flex flex-col h-fit sm:items-center md:items-start lg:items-start lg:py-2 lg:px-2 px-2 py-2 rounded-lg border shadow-md md:flex-row md:max-w-2xl w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
             <div class="flex flex-col content-start p-2 rounded dark:bg-gray-600 mx-2 my-2">
@@ -50,9 +52,76 @@
             </div>
             </div>
         </div>
-        <div id="game" class="flex flex-col sm:items-center md:items-start lg:items-start lg:py-2 lg:px-2 px-2 py-2 rounded-lg border shadow-md md:flex-row md:max-w-2xl w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+
+        <div id="game" class="flex flex-col sm:items-center md:items-start lg:items-start rounded-lg shadow-md md:flex-row md:max-w-2xl w-full hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700">   
+
+        <div class="w-full h-full bg-white rounded-lg border shadow-md dark:bg-gray-800 dark:border-gray-700">
+            <ul class="flex flex-wrap text-sm font-medium text-center text-gray-500 bg-gray-50 rounded-t-lg border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800" id="defaultTab" data-tabs-toggle="#defaultTabContent" role="tablist">
+                <li class="mr-2">
+                    <button id="about-tab" data-tabs-target="#about" type="button" role="tab" aria-controls="about" aria-selected="true" class="inline-block p-4 text-blue-600 rounded-tl-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-blue-500 hover:text-blue-600 dark:hover:text-blue-500 border-blue-600 dark:border-blue-500">Upload</button>
+                </li>
+                <li class="mr-2">
+                    <button id="services-tab" data-tabs-target="#services" type="button" role="tab" aria-controls="services" aria-selected="false" class="inline-block p-4 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:border-transparent text-gray-500 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700">Highlights</button>
+                </li>
+                <li class="mr-2">
+                    <button id="statistics-tab" data-tabs-target="#statistics" type="button" role="tab" aria-controls="statistics" aria-selected="false" class="inline-block p-4 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:border-transparent text-gray-500 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700">Reviews</button>
+                </li>
+            </ul>
+            <div id="defaultTabContent">
+                <div class="block p-3 bg-white rounded-lg dark:bg-gray-800" id="about" role="tabpanel" aria-labelledby="about-tab">
+                    <h2 class="mb-3 text-normal font-extrabold tracking-tight text-gray-900 dark:text-white">Upload your highlights.</h2>
+                    <div class="flex flex-col">
+                        <div class="mb-2 w-full">
+                            <form>   
+                                <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300">Search</label>
+                                <div class="relative">
+                                    <input type="search" id="default-search" class="block p-4 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="https://youtu.be/kgx4WGK0oNU" required>
+                                    <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Upload</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+
+                </div>
+                <div class="hidden p-2 bg-white rounded-lg md:p-4 dark:bg-gray-800" id="services" role="tabpanel" aria-labelledby="services-tab">
+                    <div class="grid grid-cols-1 gap-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 sm:w-full overflow-hidden">
+                        <div id="player1" class="flex flex-col h-fit sm:items-center md:items-start lg:items-start lg:py-2 lg:px-2 px-2 py-2 rounded-lg border shadow-md md:flex-row md:max-w-2xl w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                            <iframe class="w-full aspect-video lg:hover:aspect-[4/3]" src="https://www.youtube.com/embed/kgx4WGK0oNU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div id="game" class="flex flex-col h-fit sm:items-center md:items-start lg:items-start lg:py-2 lg:px-2 px-2 py-2 rounded-lg border shadow-md md:flex-row md:max-w-2xl w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                            <iframe class="w-full aspect-video lg:hover:aspect-[4/3]" src="https://www.youtube.com/embed/kgx4WGK0oNU?autoplay=0&frameborder=0&controls=0&?modestbranding=1&fs=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div id="game" class="flex flex-col h-fit sm:items-center md:items-start lg:items-start lg:py-2 lg:px-2 px-2 py-2 rounded-lg border shadow-md md:flex-row md:max-w-2xl w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                            <iframe class="w-full aspect-video lg:hover:aspect-[4/3]" src="https://www.youtube.com/embed/kgx4WGK0oNU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div id="game" class="flex flex-col h-fit sm:items-center md:items-start lg:items-start lg:py-2 lg:px-2 px-2 py-2 rounded-lg border shadow-md md:flex-row md:max-w-2xl w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                            <iframe class="w-full aspect-video lg:hover:aspect-[4/3]" src="https://www.youtube.com/embed/kgx4WGK0oNU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
+                    <dl class="grid grid-cols-2 gap-8 p-4 mx-auto max-w-screen-xl text-gray-900 sm:grid-cols-3 xl:grid-cols-6 dark:text-white sm:p-8">
+                        <div class="flex flex-col">
+                            <dt class="mb-2 text-3xl font-extrabold">73M+</dt>
+                            <dd class="font-light text-gray-500 dark:text-gray-400">Developers</dd>
+                        </div>
+                        <div class="flex flex-col">
+                            <dt class="mb-2 text-3xl font-extrabold">100M+</dt>
+                            <dd class="font-light text-gray-500 dark:text-gray-400">Public repositories</dd>
+                        </div>
+                        <div class="flex flex-col">
+                            <dt class="mb-2 text-3xl font-extrabold">1000s</dt>
+                            <dd class="font-light text-gray-500 dark:text-gray-400">Open source projects</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </div>
 
         </div>
     </div>
+</div>
+
 
 {% endblock %}

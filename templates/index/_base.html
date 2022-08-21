@@ -1,6 +1,5 @@
 {% load compress %}
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,7 +25,7 @@
 
 <body class="dark:bg-gray-800">
     
-<nav class="bg-white border-gray-200 px-2 md:px-4 py-2.5 dark:bg-gray-900">
+<nav class="bg-white border-gray-200 px-2 md:px-4 py-2.5 dark:bg-gray-900 w-full z-20 top-0 left-0">
   <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
       <a href="{% url 'index' %}" class="flex items-center">
           <img src="https://i.imgur.com/Jdd62dc.png" class="mr-3 h-6 sm:h-9" alt="Flowbite Logo">
@@ -254,7 +253,7 @@
 </div>
 </nav>
 
-    <div class="flex sm:mx-4 md:mx-4 lg:mx-4 justify-center items-center p-0 mt-4">
+    <div class="container mx-auto justify-center items-center p-0 mt-4">
         {% block content %}
         {% endblock content %}
     </div>
@@ -520,7 +519,53 @@
     }
 }
 </script>
+<script>
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    var player;
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player1', {
+            height: '390',
+            width: '640',
 
+            videoId: 'M7lc1UVf-VE',
+            playerVars: {
+                'autoplay': 0,
+                'controls': 0,
+                'rel': 0,
+                'fs': 1,
+                'showinfo': 1,
+                'cc_load_policy': 0,
+                'modesbranding': 1,
+                'playsinline': 1,
+                'enablejsapi': 1,
+                'origin': 'http://localhost:8080'
+            },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+
+        });
+    }
+    function onPlayerReady(event) {
+        event.target.playVideo();
+    }
+    var done = false;
+    function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING && !done) {
+            setTimeout(stopVideo, 6000);
+            done = true;
+        }
+    }
+    function stopVideo() {
+        player.stopVideo();
+    }
+
+
+</script>
 </body>
 
 </html>

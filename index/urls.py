@@ -8,6 +8,7 @@ urlpatterns = [
     path('info/<str:pk>/', completeProfile, name='completeinfo'),
     path('logout/', logout_view, name='logout'),
     path('sent/', activation_sent_view, name="activation_sent"),
+    path('oauthtiktok/', oauthtiktok, name='oauthtiktok'),
     path('<slug:slug>/', UserDetailView.as_view(), name='userinfo'),
     path('follow/<str:loggedinuser>/<str:pk>/',
          followToggle, name='followtoggle'),
