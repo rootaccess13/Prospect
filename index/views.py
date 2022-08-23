@@ -123,12 +123,19 @@ def logout_view(request):
     return redirect('index')
 
 
-class UserDetailView(HitCountDetailView, View):
+class UserDetailView(LoginRequiredMixin, HitCountDetailView, View):
     model = CustomUser
     template_name = 'accounts/profile_view.html'
     context_object_name = 'userinfos'
     slug_field = 'slug'
     count_hit = True
+
+    # raise login required exception if user is not logged in
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.add_message(request, messages.ERROR,
+                                 'You need to be logged in to view this page')
+        return super().dispatch(request, *args, **kwargs)
 
 
 def activation_sent_view(request):
