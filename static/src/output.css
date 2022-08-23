@@ -2899,6 +2899,11 @@ input:checked + .toggle-bg {
     margin-right: 0.5rem;
   }
 
+  .lg\:mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .lg\:w-60 {
     width: 15rem;
   }
