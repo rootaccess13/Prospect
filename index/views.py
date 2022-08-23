@@ -1,7 +1,3 @@
-from decimal import Context
-import email
-from itertools import count
-from multiprocessing import context
 from django.contrib.auth import login, authenticate, logout
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
@@ -68,6 +64,10 @@ def signup(request):
             })
             send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email])
             return redirect('activation_sent')
+        else:
+            messages.add_message(request, messages.ERROR,
+                                 'Sign up failed, Invalid email or password, try again.')
+            return redirect('index')
     else:
         form = SignUpForm()
     return render(request, 'index/index.html', {'form': form, 'userdata': userdataobjects})
@@ -84,7 +84,8 @@ def signin(request):
             login(request, user)
             return redirect('index')
         else:
-            messages.error(request, 'Invalid username or password')
+            messages.add_message(request, messages.ERROR,
+                                 'Sign in failed, invalid email or password.')
             return redirect('index')
     context = {
         'userdata': userdataobjects,
@@ -134,7 +135,7 @@ class UserDetailView(LoginRequiredMixin, HitCountDetailView, View):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             messages.add_message(request, messages.ERROR,
-                                 'You need to be logged in to view this page')
+                                 'You need to be logged in to view this page.')
         return super().dispatch(request, *args, **kwargs)
 
 
