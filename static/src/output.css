@@ -2704,6 +2704,11 @@ input:checked + .toggle-bg {
     order: 1;
   }
 
+  .md\:mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .md\:mr-2 {
     margin-right: 0.5rem;
   }
