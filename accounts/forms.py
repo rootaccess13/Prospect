@@ -2,7 +2,7 @@ from cProfile import label
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import CustomUser
+from .models import CustomUser, ProfileHighlights
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth import login, authenticate, logout
@@ -73,7 +73,7 @@ class LoginForm(forms.ModelForm):
 
 class AvatarForm(forms.ModelForm):
     avatar = forms.ImageField(widget=forms.FileInput(attrs={
-                              'class': 'block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400'}))
+                              'class': 'block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400', 'placeholder': 'Upload Avatar', 'accept': 'image/*', 'label': ''}))
 
     class Meta:
         model = CustomUser
@@ -88,3 +88,23 @@ class AvatarForm(forms.ModelForm):
             if extension not in ['png', 'jpg', 'jpeg', 'gif', 'webp']:
                 raise forms.ValidationError("Invalid extension")
         return cleaned_data
+
+
+# class HighlightsForm(forms.ModelForm):
+#     highlights = forms.URLField(widget=forms.TextInput(attrs={
+#                                 'class': 'block p-4 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500', 'placeholder': 'Highlights'}))
+
+#     class Meta:
+#         model = ProfileHighlights
+#         fields = ['highlights']
+
+#     def clean(self, *args, **kwargs):
+#         cleaned_data = super().clean()
+#         highlights = cleaned_data.get('highlights')
+#         # validate extension
+#         if highlights:
+#             # clean youtube url
+#             if 'youtube' in highlights:
+#                 highlights = highlights.split('=')[-1]
+
+#         return cleaned_data

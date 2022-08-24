@@ -1,5 +1,4 @@
-import email
-from email.policy import default
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
@@ -78,7 +77,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.ign)
+            self.slug = slugify(self.ign).replace(' ', '-')
+        # convert white space to hyphen
+        self.ign = self.ign.replace(' ', '-')
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -104,3 +105,21 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def check_follow(self, user):
         return self.following.filter(pk=user.pk).exists()
+
+
+class ProfileHighlights(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    highlight = models.URLField(max_length=200, blank=True, null=True,
+                                default='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+    feedback = models.ManyToManyField(
+        CustomUser, blank=True, symmetrical=False, related_name='feedback')
+
+    def __str__(self):
+        return self.user.ign + ' ' + self.highlight
+
+    def save(self, *args, **kwargs):
+        # get parameters from url
+        url = self.highlight
+        video_id = url.split('v=')[1]
+        self.highlight = 'https://www.youtube.com/embed/' + video_id
+        super().save(*args, **kwargs)

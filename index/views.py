@@ -20,7 +20,7 @@ from accounts.tokens import account_activation_token
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse
 from django.conf import settings
-from accounts.models import CustomUser
+from accounts.models import CustomUser, ProfileHighlights
 from django.http import Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
@@ -33,6 +33,12 @@ from django.conf import settings
 import random
 from django.utils.http import urlsafe_base64_encode
 import urllib.parse
+from django.template.defaulttags import register
+
+
+@register.filter
+def get_value(dictionary, key):
+    return dictionary.get(key)
 
 
 def signup(request):
@@ -63,10 +69,13 @@ def signup(request):
                 'token': account_activation_token.make_token(user),
             })
             send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email])
-            return redirect('activation_sent')
+            messages.add_message(
+                request, messages.SUCCESS, 'Account created successfully. Please check your email to activate your account.')
+            return redirect('index')
         else:
+            # raise form messages
             messages.add_message(request, messages.ERROR,
-                                 'Sign up failed, Invalid email or password, try again.')
+                                 'Sign up failed, please try again.')
             return redirect('index')
     else:
         form = SignUpForm()
@@ -82,6 +91,8 @@ def signin(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
+            messages.add_message(request, messages.SUCCESS,
+                                 'Successfully logged in.')
             return redirect('index')
         else:
             messages.add_message(request, messages.ERROR,
@@ -98,8 +109,12 @@ def followToggle(request, pk, loggedinuser):
     user = CustomUser.objects.get(pk=pk)
     if request.user in user.follower.all():
         user.follower.remove(request.user)
+        messages.add_message(request, messages.SUCCESS,
+                             'You unfollowed ' + user.ign + '.')
     else:
         user.follower.add(request.user)
+        messages.add_message(request, messages.SUCCESS,
+                             'You followed ' + user.ign + '.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -131,7 +146,27 @@ class UserDetailView(LoginRequiredMixin, HitCountDetailView, View):
     slug_field = 'slug'
     count_hit = True
 
-    # raise login required exception if user is not logged in
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile_highlights'] = ProfileHighlights.objects.filter(
+            user=self.object)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        user = self.get_object()
+        highlight = request.POST['highlight']
+        if highlight and 'youtube' in highlight:
+            ProfileHighlights.objects.create(
+                user=user, highlight=highlight)
+            messages.add_message(request, messages.SUCCESS,
+                                 'Highlight added successfully.')
+            return redirect('userinfo', user.slug)
+
+        else:
+            messages.add_message(request, messages.ERROR,
+                                 'Highlights upload failed, invalid url. Please try again.')
+        return redirect('userinfo', user.slug)
+
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             messages.add_message(request, messages.ERROR,
@@ -164,23 +199,24 @@ def activate(request, uidb64, token):
 
 @ lr
 def completeProfile(request, pk):
-    user = get_object_or_404(CustomUser, pk=pk)
-    if request.user.pk == user.pk:
-        if request.method == 'POST':
-            avatarform = AvatarForm(request.POST or None,
-                                    request.FILES or None, instance=user)
-            if avatarform.is_valid():
-                user.gamerole = request.POST['gamerole']
-                user.gametype = request.POST['gametype']
-                user.formerteam = request.POST['formerteam']
-                user.save()
-                avatarform.save()
-                return redirect('index')
+    user = CustomUser.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = AvatarForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            user.gamerole = request.POST['gamerole']
+            user.gametype = request.POST['gametype']
+            user.formerteam = request.POST['formerteam']
+            user.save()
+            form.save()
+            messages.add_message(request, messages.SUCCESS,
+                                 'Profile updated successfully.')
+            return redirect('index')
         else:
-            avatarform = AvatarForm(instance=user)
-        return render(request, 'accounts/complete_profile.html', {'avatarform': avatarform, 'user': user})
+            messages.error(request, form.errors)
+            return redirect('completeinfo', pk=user.pk)
     else:
-        raise Http404
+        form = AvatarForm(instance=user)
+    return render(request, 'accounts/complete_profile.html', {'form': form, 'user': user})
 
 
 def success(request):
