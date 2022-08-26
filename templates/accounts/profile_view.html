@@ -159,7 +159,7 @@
                     <div class="flex flex-row content-center">
                         <div class="-space-x-4">
                             {% for data in reviewuserdata %}
-                            <img class="flex w-10 h-10 rounded-full border-2 border-white dark:border-gray-800" src="{{AWS_MEDIA_URL}}{{data.avatar }}" alt="">
+                            <img class="flex w-10 h-10 rounded-full border-2 border-white dark:border-gray-800" src="{{data.user.avatar.url }}" alt="">
                             <a class="flex justify-center items-center w-10 h-10 text-xs font-medium text-white bg-gray-700 rounded-full border-2 border-white hover:bg-gray-600 dark:border-gray-800" href="#">+99</a>
                             {% endfor %}
                         </div>
