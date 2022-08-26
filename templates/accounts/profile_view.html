@@ -160,8 +160,9 @@
                         <div class="-space-x-4">
                             {% for data in reviewuserdata %}
                             <img class="flex w-10 h-10 rounded-full border-2 border-white dark:border-gray-800" src="{{data.user.avatar.url }}" alt="">
-                            <a class="flex justify-center items-center w-10 h-10 text-xs font-medium text-white bg-gray-700 rounded-full border-2 border-white hover:bg-gray-600 dark:border-gray-800" href="#">+99</a>
                             {% endfor %}
+                            <a class="flex justify-center items-center w-10 h-10 text-xs font-medium text-white bg-gray-700 rounded-full border-2 border-white hover:bg-gray-600 dark:border-gray-800" href="#">+99</a>
+
                         </div>
                     </div>
                     
@@ -178,12 +179,14 @@
                     <textarea id="message" rows="4" name="reviews" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message..."></textarea>
                     <button type="submit" class="py-2.5 px-5 mr-2 my-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Submit</button>
                 </form>
-                <div class="flex flex-col">
+                <div class="flex flex-row grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
                     {% for data in reviewuserdata %}
-                        {% if data.review != null %}
-                            <h1 class="text-sm underline dark:text-blue-500">{{data.author}}</h1>
-                            <p class="text-xs my-2 dark:text-gray-400">{{data.review}}</p>
-                        {% endif %}
+                    {% if data.review != null %}
+                    <div class="flex flex-col mx-2 mt-2 p-2 rounded-lg dark:bg-gray-600 shadow-lg">
+                        <h1 class="text-sm underline font-bold tracking-wide dark:text-gray-300">{{data.author}}</h1>
+                        <p class="text-xs my-2 dark:text-gray-400">{{data.review}}</p>
+                    </div>
+                    {% endif %}
                     {% endfor %}
                 </div>
                 

@@ -151,8 +151,7 @@ class UserDetailView(LoginRequiredMixin, HitCountDetailView, View):
             user=self.object)
         context['reviewuserdata'] = ReviewUser.objects.filter(
             user=self.object)
-        context['AWS_MEDIA_URL'] = 'https://{0}.s3.{1}.amazonaws.com/'.format(
-            settings.AWS_STORAGE_BUCKET_NAME, settings.AWS_S3_REGION_NAME)
+
         return context
 
     def post(self, request, *args, **kwargs):

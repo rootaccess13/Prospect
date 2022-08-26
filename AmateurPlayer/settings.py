@@ -177,17 +177,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AWS_ACCESS_KEY_ID = "AKIATUTGCKKNBNBEEVX5"
 AWS_SECRET_ACCESS_KEY = "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"
-AWS_STORAGE_BUCKET_NAME = "prospectassets"
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_STORAGE_BUCKET_NAME = "prospects3"
 AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = 'public-read'
+AWS_DEFAULT_ACL = None
 AWS_S3_REGION_NAME = 'ap-southeast-1'
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_S3_ADDRESSING_STYLE = 'virtual'
-AWS_LOCATION = 'static'
-AWS_MEDIA = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-DEFAULT_FILE_STORAGE = 'AmateurPlayer.storage_backends.MediaStorage'
-
 django_heroku.settings(locals())
 CORS_ORIGIN_ALLOW_ALL = True
