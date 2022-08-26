@@ -1397,6 +1397,10 @@ input:checked + .toggle-bg {
   height: 2.25rem;
 }
 
+.h-screen {
+  height: 100vh;
+}
+
 .w-full {
   width: 100%;
 }
