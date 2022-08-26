@@ -155,17 +155,10 @@
             <div class="grid grid-cols-1 gap-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 sm:w-full overflow-hidden">
                 {% for link in profile_highlights %}
                 <div id="game" class="flex flex-col h-fit sm:items-center md:items-start lg:items-start lg:py-2 lg:px-2 px-2 py-2 rounded-lg border shadow-md md:flex-row md:max-w-2xl w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-                    <iframe class="w-full aspect-video lg:hover:aspect-video" src="{{link.highlight}}?autoplay=0&frameborder=0&controls=0&?modestbranding=1&fs=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    <div class="flex flex-row content-center">
-                        <div class="-space-x-4">
-                            {% for data in reviewuserdata %}
-                            <img class="flex w-10 h-10 rounded-full border-2 border-white dark:border-gray-800" src="{{data.user.avatar.url }}" alt="">
-                            {% endfor %}
-                            <a class="flex justify-center items-center w-10 h-10 text-xs font-medium text-white bg-gray-700 rounded-full border-2 border-white hover:bg-gray-600 dark:border-gray-800" href="#">+99</a>
-
-                        </div>
+                    <div class="flex flex-col">
+                        <iframe class="w-full aspect-video lg:hover:aspect-video mb-2" src="{{link.highlight}}?autoplay=0&frameborder=0&controls=0&?modestbranding=1&fs=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <svg class="w-6 h-6" fill="#8c8c8b" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z" clip-rule="evenodd"></path></svg>
                     </div>
-                    
                 </div>
                 {% endfor %}
             </div>
@@ -173,23 +166,37 @@
     </div>
     <div class="hidden m-2 bg-gray-50 rounded-lg dark:bg-gray-800" id="settings" role="tabpanel" aria-labelledby="settings-tab">
             <div class="p-2 bg-white rounded-lg dark:bg-gray-800" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
-                <form action="{% url 'create_review' slug=userinfos.slug %}" method="POST">
+                <form class="mb-2" action="{% url 'create_review' slug=userinfos.slug %}" method="POST">
                     {% csrf_token %}
                     <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Your message</label>
-                    <textarea id="message" rows="4" name="reviews" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message..."></textarea>
-                    <button type="submit" class="py-2.5 px-5 mr-2 my-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Submit</button>
+                    <textarea id="message" rows="4" name="reviews" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message..." required></textarea>
+                    <button type="submit" id="reviewbtn" class="py-2.5 px-5 mr-2 my-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Submit</button>
                 </form>
-                <div class="flex flex-row grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
+                <div class="border rounded-lg dark:border-gray-700">
+                    <span class="text-base font-bold dark:text-white mx-2">Reviews</span>
+
                     {% for data in reviewuserdata %}
-                    {% if data.review != null %}
-                    <div class="flex flex-col mx-2 mt-2 p-2 rounded-lg dark:bg-gray-600 shadow-lg">
-                        <h1 class="text-sm underline font-bold tracking-wide dark:text-gray-300">{{data.author}}</h1>
-                        <p class="text-xs my-2 dark:text-gray-400">{{data.review}}</p>
+
+                    <div class="flex flex-row grid grid-cols-1 h-fit">
+                        <div class="relative flex flex-col mx-2 mt-2 p-2 mb-2 h-fit rounded-lg dark:bg-gray-600 shadow-lg">
+                            <span class="absolute top-0 right-0 text-xs m-2 dark:text-gray-400">{{data.get_date}}</span>
+                            {% if request.user.ign == data.author %}
+                            <span class="text-sm underline font-bold tracking-wide dark:text-gray-300">You</span>
+                            {% else %}
+
+                            <h1 class="text-sm underline font-bold tracking-wide dark:text-gray-300">{{data.author}}</h1>
+                            {% endif %}
+                            <p class="text-xs my-2 dark:text-gray-400">{{data.review}}</p>
+                        </div>
                     </div>
+
+
+                    {% if data.review.count < 1 %}
+                    <p class="text-base font-medium text-gray-900 dark:text-white mx-2">No reviews yet</p>
                     {% endif %}
                     {% endfor %}
                 </div>
-                
+                                
             </div>
     </div>
     </div>

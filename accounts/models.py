@@ -135,9 +135,16 @@ class ReviewUser(models.Model):
     author = models.CharField(
         max_length=50, blank=True, null=True, default='Anonymous')
     avatar = models.URLField(max_length=200, blank=True, null=True)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE)
     review = models.TextField(max_length=4000, blank=True, null=True)
     date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.user.ign + ' ' + self.review
+        return self.author
+
+    def get_date(self):
+        return self.date.strftime('%d %b %Y')
+
+    def review_count(self):
+        return ReviewUser.objects.filter(user=self.user).count()

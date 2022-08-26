@@ -283,6 +283,8 @@
     </div>
 
 <script src="https://unpkg.com/flowbite@1.5.2/dist/flowbite.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
 <script>
   var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
   var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
@@ -591,10 +593,40 @@
 
 </script>
 <script>
-    function removeAboutTab(){
-        var aboutTab = document.getElementById('about');
-        aboutTab.classList.remove('block');
-    }
+function getCookie(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+    var btn = document.getElementById('reviewbtn');
+    var csrftoken = getCookie('csrftoken');
+    btn.addEventListener('click', function() {
+        axios.post('http://127.0.0.1:8000/accounts/review/', {
+        'author': 'mavs',
+        'user': 99,
+        'review': 'test API',
+    }, {
+        headers: {
+            'X-CSRFTOKEN': csrftoken
+        }
+    })
+        .then(function (response) {
+            console.log(response.data);
+        })
+        .catch(function (error) {
+    })
+
+    });
 </script>
 </body>
 </html>

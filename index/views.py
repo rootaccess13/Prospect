@@ -103,7 +103,7 @@ def signin(request):
     return render(request, 'index/index.html', context)
 
 
-@require_http_methods(["POST"])
+@require_http_methods(["GET", "POST"])
 def followToggle(request, pk, loggedinuser):
     user = CustomUser.objects.get(pk=pk)
     if request.user in user.follower.all():
@@ -150,7 +150,7 @@ class UserDetailView(LoginRequiredMixin, HitCountDetailView, View):
         context['profile_highlights'] = ProfileHighlights.objects.filter(
             user=self.object)
         context['reviewuserdata'] = ReviewUser.objects.filter(
-            user=self.object)
+            user=self.object).order_by('-date')
 
         return context
 
@@ -184,6 +184,7 @@ def create_review(request, slug):
     if review:
         ReviewUser.objects.create(
             user=user, author=request.user.ign, review=review, avatar=request.user.avatar)
+
         messages.add_message(request, messages.SUCCESS,
                              'Review added successfully.')
         return redirect('userinfo', user.slug)
