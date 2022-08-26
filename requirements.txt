@@ -22,3 +22,4 @@ Pillow
 django-hitcount
 boto3
 django-storages
+djangorestframework==3.13.1
