@@ -25,7 +25,6 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'compressor',
     'hitcount',
-    'rest_framework',
 ]
 
 MIDDLEWARE = [
