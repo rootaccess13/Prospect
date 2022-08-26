@@ -17,23 +17,20 @@ from django.contrib.auth.decorators import login_required as lr
 from django.utils import timezone
 from accounts.forms import SignUpForm
 from accounts.tokens import account_activation_token
-from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse
 from django.conf import settings
-from accounts.models import CustomUser, ProfileHighlights
+from accounts.models import CustomUser, ProfileHighlights, ReviewUser
 from django.http import Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
-from django.views.generic.list import ListView
 from hitcount.views import HitCountDetailView
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 from accounts.forms import AvatarForm
 from django.conf import settings
-import random
 from django.utils.http import urlsafe_base64_encode
-import urllib.parse
 from django.template.defaulttags import register
+from django.views.decorators.http import require_http_methods
 
 
 @register.filter
@@ -82,6 +79,7 @@ def signup(request):
     return render(request, 'index/index.html', {'form': form, 'userdata': userdataobjects})
 
 
+@require_http_methods(["GET", "POST"])
 def signin(request):
     userdata = CustomUser.objects.exclude(is_staff=True)
     userdataobjects = userdata[:10]
@@ -105,6 +103,7 @@ def signin(request):
     return render(request, 'index/index.html', context)
 
 
+@require_http_methods(["POST"])
 def followToggle(request, pk, loggedinuser):
     user = CustomUser.objects.get(pk=pk)
     if request.user in user.follower.all():
@@ -150,6 +149,10 @@ class UserDetailView(LoginRequiredMixin, HitCountDetailView, View):
         context = super().get_context_data(**kwargs)
         context['profile_highlights'] = ProfileHighlights.objects.filter(
             user=self.object)
+        context['reviewuserdata'] = ReviewUser.objects.filter(
+            user=self.object)
+        context['AWS_MEDIA_URL'] = 'https://{0}.s3.{1}.amazonaws.com/'.format(
+            settings.AWS_STORAGE_BUCKET_NAME, settings.AWS_S3_REGION_NAME)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -161,7 +164,6 @@ class UserDetailView(LoginRequiredMixin, HitCountDetailView, View):
             messages.add_message(request, messages.SUCCESS,
                                  'Highlight added successfully.')
             return redirect('userinfo', user.slug)
-
         else:
             messages.add_message(request, messages.ERROR,
                                  'Highlights upload failed, invalid url. Please try again.')
@@ -172,6 +174,24 @@ class UserDetailView(LoginRequiredMixin, HitCountDetailView, View):
             messages.add_message(request, messages.ERROR,
                                  'You need to be logged in to view this page.')
         return super().dispatch(request, *args, **kwargs)
+
+
+@lr
+@require_http_methods(["POST"])
+def create_review(request, slug):
+    user = CustomUser.objects.get(slug=slug)
+    review = request.POST['reviews']
+
+    if review:
+        ReviewUser.objects.create(
+            user=user, author=request.user.ign, review=review, avatar=request.user.avatar)
+        messages.add_message(request, messages.SUCCESS,
+                             'Review added successfully.')
+        return redirect('userinfo', user.slug)
+    else:
+        messages.add_message(request, messages.ERROR,
+                             'Review upload failed, invalid url. Please try again.')
+    return redirect('userinfo', user.slug)
 
 
 def activation_sent_view(request):
@@ -197,7 +217,8 @@ def activate(request, uidb64, token):
         return render(request, 'accounts/activation_invalid.html')
 
 
-@ lr
+@lr
+@require_http_methods(["GET", "POST"])
 def completeProfile(request, pk):
     user = CustomUser.objects.get(pk=pk)
     if request.method == 'POST':

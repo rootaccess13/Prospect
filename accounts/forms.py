@@ -2,7 +2,7 @@ from cProfile import label
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import CustomUser, ProfileHighlights
+from .models import CustomUser, ProfileHighlights, ReviewUser
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth import login, authenticate, logout
@@ -90,21 +90,19 @@ class AvatarForm(forms.ModelForm):
         return cleaned_data
 
 
-# class HighlightsForm(forms.ModelForm):
-#     highlights = forms.URLField(widget=forms.TextInput(attrs={
-#                                 'class': 'block p-4 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500', 'placeholder': 'Highlights'}))
+# class ReviewForm(forms.ModelForm):
+#     review = forms.CharField(label="Review", widget=forms.Textarea(attrs={
+#                              'class': 'block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message...', 'rows': '4'}))
 
 #     class Meta:
-#         model = ProfileHighlights
-#         fields = ['highlights']
+#         model = ReviewUser
+#         fields = ['review']
 
 #     def clean(self, *args, **kwargs):
-#         cleaned_data = super().clean()
-#         highlights = cleaned_data.get('highlights')
-#         # validate extension
-#         if highlights:
-#             # clean youtube url
-#             if 'youtube' in highlights:
-#                 highlights = highlights.split('=')[-1]
+#         cleaned_data = super().clean(*args, **kwargs)
+#         review = cleaned_data.get('review')
+#         if review:
+#             # escape the html characters
+#             review = escape(review)
 
 #         return cleaned_data

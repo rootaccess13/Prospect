@@ -111,8 +111,6 @@ class ProfileHighlights(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     highlight = models.URLField(max_length=200, blank=True, null=True,
                                 default='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
-    feedback = models.ManyToManyField(
-        CustomUser, blank=True, symmetrical=False, related_name='feedback')
 
     def __str__(self):
         return self.user.ign + ' ' + self.highlight
@@ -123,3 +121,23 @@ class ProfileHighlights(models.Model):
         video_id = url.split('v=')[1]
         self.highlight = 'https://www.youtube.com/embed/' + video_id
         super().save(*args, **kwargs)
+
+
+class ReviewUser(models.Model):
+    # rate_choice = (
+    #     (1, '1'),
+    #     (2, '2'),
+    #     (3, '3'),
+    #     (4, '4'),
+    #     (5, '5'),
+    # )
+    # star = models.IntegerField(choices=rate_choice, default=5)
+    author = models.CharField(
+        max_length=50, blank=True, null=True, default='Anonymous')
+    avatar = models.URLField(max_length=200, blank=True, null=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    review = models.TextField(max_length=4000, blank=True, null=True)
+    date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.user.ign + ' ' + self.review
