@@ -49,7 +49,7 @@
         </div>
     </div>
 
-    <div id="game" class="sm:items-center md:items-start lg:items-start rounded-lg shadow-md md:flex-row md:max-w-2xl w-full hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700">   
+    <div id="game" class="sm:items-center md:items-start lg:items-start rounded-lg shadow-md md:flex-row md:max-w-2xl w-full h-fit hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700">   
         <!-- <div class="w-full h-full bg-white rounded-lg border shadow-md dark:bg-gray-800 dark:border-gray-700">
             <ul class="flex flex-wrap text-sm font-medium text-center text-gray-500 bg-gray-50 rounded-t-lg border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800" id="defaultTab" data-tabs-toggle="#defaultTabContent" role="tablist">
                 <li class="mr-2">
@@ -122,7 +122,7 @@
     </ul>
 </div>
 <div id="myTabContent">
-    <div class="rounded-lg m-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+    <div class="rounded-lg m-2 h-fit" id="profile" role="tabpanel" aria-labelledby="profile-tab">
     {% if request.user.pk == userinfos.pk %}
         <div class="p-2 bg-white rounded-lg md:p-4 dark:bg-gray-800" id="about" role="tabpanel" aria-labelledby="about-tab">
         <h2 class="mb-3 text-normal font-extrabold tracking-tight text-gray-900 dark:text-white">Upload your highlights.</h2>
@@ -150,21 +150,17 @@
     </div>
     {% endif %}
     </div>
-    <div class="hidden m-2 bg-gray-50 rounded-lg dark:bg-gray-800" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-        <div class="p-2 bg-white rounded-lg md:p-4 dark:bg-gray-800" id="services" role="tabpanel" aria-labelledby="services-tab">
-            <div class="grid grid-cols-1 gap-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 sm:w-full overflow-hidden">
-                {% for link in profile_highlights %}
-                <div id="game" class="flex flex-col h-fit sm:items-center md:items-start lg:items-start lg:py-2 lg:px-2 px-2 py-2 rounded-lg border shadow-md md:flex-row md:max-w-2xl w-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-                    <div class="flex flex-col">
-                        <iframe class="w-full aspect-video lg:hover:aspect-video mb-2" src="{{link.highlight}}?autoplay=0&frameborder=0&controls=0&?modestbranding=1&fs=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        <svg class="w-6 h-6" fill="#8c8c8b" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z" clip-rule="evenodd"></path></svg>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
+    <div class="hidden m-2 bg-gray-50 rounded-lg dark:bg-gray-800 h-fit" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+        <div class="flex flex-row p-2 bg-white rounded-lg dark:bg-gray-800 w-full overflow-x-scroll sm:overflow-x-scroll md:overflow-x-scroll lg:overflow-x-scroll" id="services" role="tabpanel" aria-labelledby="services-tab">
+            <div class="flex">
+            {% for link in profile_highlights %}
+                <iframe class="w-full aspect-video lg:hover:aspect-video m-2" src="{{link.highlight}}?autoplay=0&frameborder=0&controls=0&?modestbranding=1&fs=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <svg class="w-6 h-6" fill="#8c8c8b" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z" clip-rule="evenodd"></path></svg>
+            {% endfor %}
+            </div>    
         </div>
     </div>
-    <div class="hidden m-2 bg-gray-50 rounded-lg dark:bg-gray-800" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+    <div class="hidden m-2 bg-gray-50 rounded-lg dark:bg-gray-800 h-fit" id="settings" role="tabpanel" aria-labelledby="settings-tab">
             <div class="p-2 bg-white rounded-lg dark:bg-gray-800" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
                 <form class="mb-2" action="{% url 'create_review' slug=userinfos.slug %}" method="POST">
                     {% csrf_token %}
@@ -172,7 +168,7 @@
                     <textarea id="message" rows="4" name="reviews" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message..." required></textarea>
                     <button type="submit" class="py-2.5 px-5 mr-2 my-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Submit</button>
                 </form>
-                <div class="border rounded-lg dark:border-gray-700">
+                <div class="border rounded-lg dark:border-gray-700 overflow-y-scroll h-80">
                     <span class="text-base font-bold dark:text-white mx-2">Reviews</span>
 
                     {% for data in reviewuserdata %}
@@ -202,5 +198,20 @@
     </div>
 
     </div>
+
+</div>
+<div class="grid grid-cols-1 my-9 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 sm:w-full overflow-hidden">
+    <!-- <div class="p-2 bg-white rounded-lg dark:bg-gray-800 w-full">
+        <div class="relative mb-2">
+            <input type="text" name="highlight" id="default-search" class="block p-4 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="e.g: https://www.youtube.com/watch?v=dQw4w9WgXcQ" required>
+            <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Upload</button>
+        </div>
+    </div>
+    <div class="p-2 bg-white rounded-lg dark:bg-gray-800 w-full">
+        <div class="relative mb-2">
+            <input type="text" name="highlight" id="default-search" class="block p-4 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="e.g: https://www.youtube.com/watch?v=dQw4w9WgXcQ" required>
+            <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Upload</button>
+        </div>
+    </div> -->
 </div>
 {% endblock %}
