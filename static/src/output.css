@@ -1693,6 +1693,16 @@ input:checked + .toggle-bg {
   overflow-y: scroll;
 }
 
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-ellipsis {
+  text-overflow: ellipsis;
+}
+
 .whitespace-nowrap {
   white-space: nowrap;
 }
@@ -2082,6 +2092,10 @@ input:checked + .toggle-bg {
 
 .font-light {
   font-weight: 300;
+}
+
+.uppercase {
+  text-transform: uppercase;
 }
 
 .italic {

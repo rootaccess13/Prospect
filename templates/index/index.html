@@ -7,30 +7,30 @@
 
     <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
-            <li class="mr-2" aria-selected="false" role="presentation">
+            <li class="mr-3" aria-selected="false" role="presentation">
                 <!-- <button class="inline-block p-4 rounded-t-lg border-b-2 text-blue-600 hover:text-blue-600 dark:text-blue-500 dark:hover:text-blue-500 border-blue-600 dark:border-blue-500" id="profile-tab" data-tabs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Profile</button> -->
                 <button class="inline-block rounded-t-lg border-b-2" id="valorant-tab" data-tabs-target="#valorant" type="button" role="tab" aria-controls="valorant" aria-selected="false">
-                    <img src="https://i.imgur.com/DAqnrMC.png" style="max-width: 50px;margin-left: 2px;" alt="">
+                    <img src="https://i.imgur.com/VUGlqFc.png" style="max-width: 50px;margin-left: 2px;" alt="">
                 </button>
             </li>
-            <li class="mr-2" role="presentation">
+            <li class="mr-3" role="presentation">
                 <button class="inline-block rounded-t-lg border-b-2" id="cod-tab" data-tabs-target="#cod" type="button" role="tab" aria-controls="cod" aria-selected="false">
-                    <img src="https://i.imgur.com/xO7ngnQ.png" style="max-width: 50px;margin-left: 2px;" alt="">
+                    <img src="https://i.imgur.com/bDTLKpX.png" style="max-width: 50px;margin-left: 2px;" alt="">
                 </button>
             </li>
-            <li class="mr-2" role="presentation">
+            <li class="mr-3" role="presentation">
                 <button class="inline-block rounded-t-lg border-b-2" id="dota-tab" data-tabs-target="#dota" type="button" role="tab" aria-controls="dota" aria-selected="false">
-                    <img src="https://i.imgur.com/cFUMMxQ.png" style="max-width: 50px;margin-left: 2px;" alt="">
+                    <img src="https://i.imgur.com/V3uClqc.png" style="max-width: 50px;margin-left: 2px;" alt="">
                 </button>
             </li>
-            <li role="presentation">
+            <li class="mr-3" role="presentation">
                 <button class="inline-block rounded-t-lg border-b-2" id="pubg-tab" data-tabs-target="#pubg" type="button" role="tab" aria-controls="pubg" aria-selected="false">
-                    <img src="https://i.imgur.com/c4JxF6e.png" style="max-width: 50px;margin-left: 2px;" id="pubg-tab" data-tabs-target="#pubg" type="button" role="tab" aria-controls="pubg" aria-selected="false" alt="">
+                    <img src="https://i.imgur.com/khsmVFH.png" style="max-width: 50px;margin-left: 2px;" id="pubg-tab" data-tabs-target="#pubg" type="button" role="tab" aria-controls="pubg" aria-selected="false" alt="">
                 </button>
             </li>
-            <li role="presentation">
+            <li class="mr-3" role="presentation">
                 <button class="inline-block rounded-t-lg border-b-2" id="ml-tab" data-tabs-target="#ml" type="button" role="tab" aria-controls="ml" aria-selected="false">
-                    <img src="https://i.imgur.com/0iFiz7f.png" style="max-width: 50px;margin-left: 2px;" alt="">
+                    <img src="https://i.imgur.com/86JDmUI.png" style="max-width: 50px;margin-left: 2px;" alt="">
                 </button>
             </li>
         </ul>
@@ -55,17 +55,16 @@
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 sm:w-full overflow-hidden">
                 {% for data in userdata %}
                     {% if data.gametype == 'valorant' %}
-                    <div>
+                    <div class="overflow-hidden">
                         <a href="#" data-popover-target="{{data.gametype}}{{data.ign}}" data-popover-placement="bottom" data-popover-trigger="click" class="flex flex-col p-2 items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-sm hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
                             <img class="object-cover w-28 rounded-lg md:h-auto md:w-24 md:rounded-none md:rounded-l-lg" src="{{data.avatar.url}}" alt="">
-                            <div class="flex flex-col justify-between sm:py-2 px-4 leading-normal content-center w-full">
-                                    <h5 class="mb-2 font-bold tracking-tight text-gray-900 dark:text-white md:text-start sm:text-center md:text-center lg:text-center sm:text-xs  md:text-2xl lg:text-base overflow-hidden">
+                            <div class="flex flex-col justify-between sm:py-2 px-4 leading-normal content-center w-full truncate">
+                                    <h5 class="mb-2 font-bold tracking-tight text-gray-900 dark:text-white md:text-start sm:text-center md:text-center lg:text-center sm:text-xs  md:text-2xl lg:text-base text-ellipsis overflow-hidden">
                                         <span class="text-yellow-400 text-center sm:text-sm md:text-2xl lg:text-base items-center">
                                             {{data.formerteam | default_if_none:''}}</span>
                                             <span class="ml-px justify-center">
                                                 {{data.ign}}
                                             </span></h5>
-                                <!-- <p class="mb-3 font-normal text-left text-center text-gray-700 dark:text-gray-400 sm:text-xs md:text-base md:text-start">Top Jungle prospect from Metro Manila.</p> -->
                                 <div class="inline-flex items-center justify-center">
                                     {% if data.gametype == 'valorant' %}
                                         <img src="https://i.imgur.com/xoCSTee.png" class="w-5 h-5 items-center mr-2" alt="">
@@ -96,8 +95,8 @@
                                     <!-- <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Follow</button> -->
                                 </div>
                             </div>
-                            <p class="text-base flex font-semibold leading-none text-gray-900 dark:text-white items-center">
-                                <a href="{{data.get_absolute_url}}" class="p-px hover:underline">{{data.ign}}</a>
+                            <p class="text-base flex font-semibold leading-none text-gray-900 dark:text-white items-center text-ellipsis overflow-hidden">
+                                <a href="{{data.get_absolute_url}}" class="p-px hover:underline text-ellipsis overflow-hidden">{{data.ign}}</a>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                 </svg>
