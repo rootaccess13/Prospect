@@ -163,16 +163,20 @@
             <div class="p-2 bg-white rounded-lg dark:bg-gray-800" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
                 <form class="mb-2" action="{% url 'create_review' slug=userinfos.slug %}" method="POST">
                     {% csrf_token %}
-                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Your message</label>
-                    <textarea id="message" rows="4" name="reviews" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message..." required></textarea>
+                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Reviews</label>
+                    <textarea id="message" rows="2" name="reviews" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message..." required></textarea>
                     <button type="submit" class="py-2.5 px-5 mr-2 my-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Submit</button>
                 </form>
-                <div class="border rounded-lg dark:border-gray-700 overflow-y-scroll h-80">
-                    <span class="text-base font-bold dark:text-white mx-2">Reviews</span>
-
+                {% if review_count == 0 %}
+                <div class="rounded-lg dark:border-gray-700 border p-2">
+                    <p class="text-sm italic text-gray-600">No reviews.</p>
+                </div>
+                    
+                {% else %}
+                <span class="text-base font-bold dark:text-white mx-2">Reviews</span>
+                <div class="border rounded-lg dark:border-gray-700 overflow-y-scroll h-52">
                     {% for data in reviewuserdata %}
-
-                    <div class="flex flex-row grid grid-cols-1 h-fit">
+                    <div class="flex flex-col grid grid-cols-1 h-fit">
                         <div class="relative flex flex-col mx-2 mt-2 p-2 mb-2 h-fit rounded-lg dark:bg-gray-600 shadow-lg">
                             <span class="absolute top-0 right-0 text-xs m-2 dark:text-gray-400">{{data.get_date}}</span>
                             {% if request.user.ign == data.author %}
@@ -184,19 +188,13 @@
                             <p class="text-xs my-2 dark:text-gray-400">{{data.review}}</p>
                         </div>
                     </div>
-
-
-                    {% if data.review.count < 1 %}
-                    <p class="text-base font-medium text-gray-900 dark:text-white mx-2">No reviews yet</p>
-                    {% endif %}
                     {% endfor %}
+                    {% endif %}
                 </div>
-                                
             </div>
+        </div>
     </div>
-    </div>
-
-    </div>
+</div>
 
 </div>
 <div class="grid grid-cols-1 my-9 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 sm:w-full overflow-hidden">
