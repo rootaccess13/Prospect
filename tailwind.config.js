@@ -48,7 +48,7 @@ module.exports = {
         backgroundImage: {
           'gradient-purple': 'linear-gradient(to bottom, #3f3cbb, #121063)',
           'ml-view': 'url(https://i.imgur.com/0iFiz7f.png)',
-          'valorant-view': 'url(https://i.imgur.com/DAqnrMC.png)',
+          'valorant-view': 'url(https://i.imgur.com/xoCSTee.png)',
           'dota-view': 'url(https://i.imgur.com/cFUMMxQ.png)',
           'cod-view': 'url(https://i.imgur.com/xO7ngnQ.png)',
           'pubg-view': 'url(https://i.imgur.com/c4JxF6e.png)',

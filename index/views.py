@@ -155,7 +155,7 @@ class UserDetailView(LoginRequiredMixin, HitCountDetailView, View):
             user=self.object).count()
         context['following_count'] = self.object.follower.count()
         context['follower_count'] = self.object.following.count()
-        context['hit_count'] = HitCount.objects.get_for_object(self.object)
+
         return context
 
         return context

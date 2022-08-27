@@ -106,6 +106,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def check_follow(self, user):
         return self.following.filter(pk=user.pk).exists()
 
+    def count_hit(self):
+        return self.hit_count_generic.count()
+
 
 class ProfileHighlights(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
