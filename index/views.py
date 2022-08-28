@@ -31,11 +31,7 @@ from django.conf import settings
 from django.utils.http import urlsafe_base64_encode
 from django.template.defaulttags import register
 from django.views.decorators.http import require_http_methods
-
-
-@register.filter
-def get_value(dictionary, key):
-    return dictionary.get(key)
+from django.views.decorators.cache import cache_page
 
 
 def signup(request):

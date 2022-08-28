@@ -1,6 +1,6 @@
 {% extends "index/_base.html" %}
 {% load hitcount_tags %}
-
+{% load cache %}
 
 {% block content %}
 <div class="grid grid-cols-1 my-2 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 sm:w-full overflow-hidden mr-2">
@@ -153,9 +153,11 @@
     <div class="hidden m-2 bg-gray-50 rounded-lg dark:bg-gray-800 h-fit" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
         <div class="flex flex-row p-2 bg-white rounded-lg dark:bg-gray-800 w-full overflow-x-scroll sm:overflow-x-scroll md:overflow-x-scroll lg:overflow-x-scroll" id="services" role="tabpanel" aria-labelledby="services-tab">
             <div class="flex flex-row">
+            {% cache 500 profile_highlights %}
             {% for link in profile_highlights %}
                 <iframe class="w-full aspect-video lg:hover:aspect-video m-2" src="{{link.highlight}}?autoplay=0&frameborder=0&controls=0&?modestbranding=1&fs=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             {% endfor %}
+            {% endcache %}
             </div>    
         </div>
     </div>
@@ -207,6 +209,7 @@
                 </div>
 
                 <div class="border rounded-lg dark:border-gray-700 overflow-y-scroll h-52">
+                    {% cache 500 reviewuserdata %}
                     {% for data in reviewuserdata %}
                     <div class="flex flex-col grid grid-cols-1 h-fit">
                         <div class="relative flex flex-col mx-2 mt-2 p-2 mb-2 h-fit rounded-lg dark:bg-gray-600 shadow-lg">
@@ -221,6 +224,7 @@
                         </div>
                     </div>
                     {% endfor %}
+                    {% endcache %}
                     {% endif %}
                 </div>
             </div>

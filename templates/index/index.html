@@ -1,35 +1,36 @@
 {% extends "index/_base.html" %}
 {% load hitcount_tags %}
+{% load cache %}
 
 {% block content %}
 
 
     <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
-        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center sm:justify-center md:justify-center lg:justify-center" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
+        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center justify-start" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
             <li class="sm:mr-2 lg:mr-6" aria-selected="false" role="presentation">
                 <!-- <button class="inline-block p-4 rounded-t-lg border-b-2 text-blue-600 hover:text-blue-600 dark:text-blue-500 dark:hover:text-blue-500 border-blue-600 dark:border-blue-500" id="profile-tab" data-tabs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Profile</button> -->
                 <button class="inline-block rounded-t-lg border-b-2" id="valorant-tab" data-tabs-target="#valorant" type="button" role="tab" aria-controls="valorant" aria-selected="false">
-                    <img src="https://i.imgur.com/VUGlqFc.png" style="max-width: 50px;margin-left: 2px;" alt="">
+                    <img src="https://i.imgur.com/VUGlqFc.png" style="max-width: 40px;margin-left: 2px;" alt="">
                 </button>
             </li>
             <li class="sm:mr-2 lg:mr-6" role="presentation">
                 <button class="inline-block rounded-t-lg border-b-2" id="cod-tab" data-tabs-target="#cod" type="button" role="tab" aria-controls="cod" aria-selected="false">
-                    <img src="https://i.imgur.com/bDTLKpX.png" style="max-width: 50px;margin-left: 2px;" alt="">
+                    <img src="https://i.imgur.com/bDTLKpX.png" style="max-width: 40px;margin-left: 2px;" alt="">
                 </button>
             </li>
             <li class="sm:mr-2 lg:mr-6" role="presentation">
                 <button class="inline-block rounded-t-lg border-b-2" id="dota-tab" data-tabs-target="#dota" type="button" role="tab" aria-controls="dota" aria-selected="false">
-                    <img src="https://i.imgur.com/V3uClqc.png" style="max-width: 50px;margin-left: 2px;" alt="">
+                    <img src="https://i.imgur.com/V3uClqc.png" style="max-width: 40px;margin-left: 2px;" alt="">
                 </button>
             </li>
             <li class="sm:mr-2 lg:mr-6" role="presentation">
                 <button class="inline-block rounded-t-lg border-b-2" id="pubg-tab" data-tabs-target="#pubg" type="button" role="tab" aria-controls="pubg" aria-selected="false">
-                    <img src="https://i.imgur.com/khsmVFH.png" style="max-width: 50px;margin-left: 2px;" id="pubg-tab" data-tabs-target="#pubg" type="button" role="tab" aria-controls="pubg" aria-selected="false" alt="">
+                    <img src="https://i.imgur.com/khsmVFH.png" style="max-width: 40px;margin-left: 2px;" id="pubg-tab" data-tabs-target="#pubg" type="button" role="tab" aria-controls="pubg" aria-selected="false" alt="">
                 </button>
             </li>
             <li class="sm:mr-2 lg:mr-6" role="presentation">
                 <button class="inline-block rounded-t-lg border-b-2" id="ml-tab" data-tabs-target="#ml" type="button" role="tab" aria-controls="ml" aria-selected="false">
-                    <img src="https://i.imgur.com/86JDmUI.png" style="max-width: 50px;margin-left: 2px;" alt="">
+                    <img src="https://i.imgur.com/86JDmUI.png" style="max-width: 40px;margin-left: 2px;" alt="">
                 </button>
             </li>
         </ul>
@@ -52,10 +53,11 @@
         </div>
         <div class="hidden p-4 bg-gray-50 rounded-lg dark:bg-gray-800" id="valorant" role="tabpanel" aria-labelledby="valorant-tab">
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 sm:w-full overflow-hidden">
+                
                 {% for data in userdata %}
                     {% if data.gametype == 'valorant' %}
                     <div class="overflow-hidden">
-                        <a href="#" data-popover-target="{{data.gametype}}{{data.ign}}" data-popover-placement="bottom" data-popover-trigger="click" class="flex flex-col p-2 items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-sm hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                        <a href="#" data-popover-target="{{data.gametype}}{{data.ign}}" data-popover-placement="bottom" data-popover-trigger="click" class="flex flex-col p-2 w-64 sm:w-full md:w-full lg:w-64 items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-sm hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
                             <img class="object-cover mt-2 w-28 rounded-lg md:h-auto md:w-24 md:rounded-none md:rounded-l-lg" src="{{data.avatar.url}}" alt="">
                             <div class="flex flex-col justify-center sm:py-2 px-4 leading-normal content-center w-full truncate">
                                     <h5 class="mb-2 font-bold tracking-tight text-gray-900 dark:text-white md:text-start sm:text-center md:text-center lg:text-center sm:text-xs md:text-2xl lg:text-base text-ellipsis overflow-hidden justify-center">
@@ -140,39 +142,48 @@
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 sm:w-full overflow-hidden">
                 {% for data in userdata %}
                     {% if data.gametype == 'cod' %}
-                    <div>
-                        <a href="#" data-popover-target="{{data.gametype}}{{data.ign}}" data-popover-placement="bottom" data-popover-trigger="click" class="flex flex-col p-2 items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-sm hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-                            <img class="object-cover w-28 lg:rounded-lg md:h-auto md:w-24 md:rounded-none md:rounded-sm" src="{{data.avatar.url}}" alt="">
-                            <div class="flex flex-col justify-between sm:py-2 px-4 leading-normal">
-                                <h5 class="mb-2 font-bold tracking-tight text-gray-900 dark:text-white md:text-start sm:text-center sm:text-sm md:text-2xl lg:text-base">
-                                    <span class="text-yellow-400 sm:text-center sm:text-sm md:text-2xl lg:text-base items-center">
-                                        {{data.formerteam | default_if_none:''}}</span>
-                                        <span class="ml-px">
-                                            {{data.ign}}
-                                        </span></h5>
-                            <!-- <p class="mb-3 font-normal text-left text-center text-gray-700 dark:text-gray-400 sm:text-xs md:text-base md:text-start">Top Jungle prospect from Metro Manila.</p> -->
-                            <div class="flex">
-                                {% if data.gametype == 'cod' %}
-                                    <img src="https://i.imgur.com/xO7ngnQ.png" style="max-width: 60px;margin-left: 2px;" alt="">
-                                {% endif %}
+                    <div class="overflow-hidden">
+                        <a href="#" data-popover-target="{{data.gametype}}{{data.ign}}" data-popover-placement="bottom" data-popover-trigger="click" class="flex flex-col p-2 w-64 sm:w-full md:w-full lg:w-64 items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-sm hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                            <img class="object-cover mt-2 w-28 rounded-lg md:h-auto md:w-24 md:rounded-none md:rounded-l-lg" src="{{data.avatar.url}}" alt="">
+                            <div class="flex flex-col justify-center sm:py-2 px-4 leading-normal content-center w-full truncate">
+                                    <h5 class="mb-2 font-bold tracking-tight text-gray-900 dark:text-white md:text-start sm:text-center md:text-center lg:text-center sm:text-xs md:text-2xl lg:text-base text-ellipsis overflow-hidden justify-center">
+                                        <span class="text-yellow-400 text-center sm:text-sm md:text-2xl lg:text-base justify-center">
+                                            {{data.formerteam | default_if_none:''}}</span>
+                                            <span class="ml-px justify-center">
+                                                {{data.ign}}
+                                            </span></h5>
+                                <div class="inline-flex items-center justify-center">
+                                    {% if data.gametype == 'cod' %}
+                                        <img src="https://i.imgur.com/xoCSTee.png" class="w-5 h-5 items-center mr-2" alt="">
+                                        <img src="https://static.wikia.nocookie.net/valorant/images/7/77/InitiatorClassSymbol.png" class="w-5 h-5" alt="">
+                                    {% endif %}
+                                </div>
+                                
                             </div>
-                            
-                        </div>
                         </a>
                     </div>
                     <div id="{{data.gametype}}{{data.ign}}" role="tooltip" class="inline-block absolute invisible z-10 w-64 text-sm font-light text-gray-500 bg-white rounded-lg border-2 border-gray-200 shadow-sm opacity-0 transition-opacity duration-300 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600">
                         <div class="p-3">
                             <div class="flex justify-between items-center mb-2">
-                                <a href="#">
-                                    <img class="w-10 h-10 rounded-full" src="{{data.avatar.url}}" alt="Jese Leos">
+                                <a href="{{data.get_absolute_url}}">
+                                    <img class="w-10 h-10 rounded-full object-cover" src="{{data.avatar.url}}" alt="Jese Leos">
                                 </a>
                                 
                                 <div>
-                                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Follow</button>
+                                    {% if user.is_authenticated %}
+                                    {% if user in data.follower.all %}
+                                        <a href="{% url 'followtoggle' loggedinuser=user.ign|lower pk=data.pk  %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Unfollow</a>
+                                    {% else %}
+                                        <a  href="{% url 'followtoggle' loggedinuser=user.ign|lower pk=data.pk  %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"> Follow </a>
+                                    {% endif %}
+                                {% else %}
+                                    <p class="text-muted"> please, login to follow </p>
+                                {% endif %}
+                                    <!-- <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Follow</button> -->
                                 </div>
                             </div>
-                            <p class="text-base flex font-semibold leading-none text-gray-900 dark:text-white items-center">
-                                <a href="#" class="p-px">{{data.ign}}</a>
+                            <p class="text-base flex font-semibold leading-none text-gray-900 dark:text-white items-center text-ellipsis overflow-hidden">
+                                <a href="{{data.get_absolute_url}}" class="p-px hover:underline text-ellipsis overflow-hidden">{{data.ign}}</a>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                 </svg>
@@ -187,11 +198,12 @@
                                 </a>
                                 {% endif %}
                             </p>
-                            <p class="mb-4 text-sm font-light sm:truncate">Top Valorant amateur player from Metro Manila, looking for hopeful team to improve my skills.</p>
+                            <!-- <p class="mb-2 text-sm font-light sm:truncate">Top Valorant amateur player from Metro Manila, looking for hopeful team to improve my skills.</p> -->
+                            <img class="w-10 h-10 mb-2" src="https://playvalorant.com/assets/images/leaderboards/immortal-badge.png" alt="Jese Leos">
                             <ul class="flex text-sm font-light">
                                 <li class="mr-2">
                                     <a href="#" class="hover:underline flex items-center">
-                                        <span class="font-semibold text-gray-900 dark:text-white px-1">799</span>
+                                        <span class="font-semibold text-gray-900 dark:text-white px-1">{% get_hit_count for data %}</span>
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -200,7 +212,7 @@
                                 </li>
                                 <li>
                                     <a href="#" class="hover:underline">
-                                        <span class="font-semibold text-gray-900 dark:text-white">3,758</span>
+                                        <span class="font-semibold text-gray-900 dark:text-white">{{data.follower.count}}</span>
                                         <span>Followers</span>
                                     </a>
                                 </li>

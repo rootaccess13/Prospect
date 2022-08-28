@@ -1526,6 +1526,12 @@ input:checked + .toggle-bg {
   width: 4rem;
 }
 
+.w-fit {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
 .max-w-screen-xl {
   max-width: 1280px;
 }
@@ -3029,6 +3035,10 @@ input:checked + .toggle-bg {
     width: 6rem;
   }
 
+  .md\:w-full {
+    width: 100%;
+  }
+
   .md\:max-w-xl {
     max-width: 36rem;
   }
@@ -3189,6 +3199,10 @@ input:checked + .toggle-bg {
 
   .lg\:w-60 {
     width: 15rem;
+  }
+
+  .lg\:w-64 {
+    width: 16rem;
   }
 
   .lg\:grid-cols-2 {
