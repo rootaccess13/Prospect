@@ -27,7 +27,7 @@
 
 <body class="dark:bg-gray-800">
     
-<nav class="bg-white border-gray-200 px-2 md:px-4 py-2.5 dark:bg-gray-900 w-full z-20 top-0 left-0">
+<nav class="sticky bg-white border-gray-200 px-2 md:px-4 py-2.5 dark:bg-gray-900 w-full z-20 top-0 left-0">
   <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
       <a href="{% url 'index' %}" class="flex items-center">
           <img src="https://i.imgur.com/Jdd62dc.png" class="mr-3 h-6 sm:h-9" alt="Flowbite Logo">
@@ -135,7 +135,8 @@
           </ul>
       </div>
   </div>
-  <div id="authentication-modal" data-modal-placement="center" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
+</nav>
+<div id="authentication-modal" data-modal-placement="center" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
     <div class="relative p-4 w-full max-w-md h-full md:h-auto">
         <!-- Modal content -->
         
@@ -254,8 +255,6 @@
 
     </div>
 </div>
-</nav>
-
 
 <div class="flex">
     {% if messages %}
@@ -281,7 +280,7 @@
     </div>
     {% endfor %}
     {% endif %}
-    <aside class="w-16 h-screen sticky top-0 border-r dark:border-gray-700" aria-label="Sidebar">
+    <aside class="relative w-16 h-screen sticky top-0 border-r dark:border-gray-700" aria-label="Sidebar">
         <div class="overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800">
            <ul class="space-y-2">
               <li>
