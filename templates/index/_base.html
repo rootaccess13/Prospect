@@ -280,7 +280,7 @@
     </div>
     {% endfor %}
     {% endif %}
-    <aside class="relative w-16 h-screen sticky top-0 border-r dark:border-gray-700" aria-label="Sidebar">
+    <aside class="relative w-16 h-screen fixed top-0 border-r dark:border-gray-700" aria-label="Sidebar">
         <div class="overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800">
            <ul class="space-y-2">
               <li>
@@ -328,7 +328,7 @@
 
         </div>
     </aside>
-    <main class="m-2">
+    <main class="m-2 relative">
         {% block content %}
         {% endblock content %}
     </main>
