@@ -37,8 +37,11 @@ from django.views.decorators.cache import cache_page
 def signup(request):
     # Get CustomUser object except for staff users
     userdata = CustomUser.objects.exclude(is_staff=True)
+    # order by highest hit count
+
     # get 10 objects from CustomUser object
-    userdataobjects = userdata[:10]
+    userdataobjects = userdata.order_by('-hit_count_generic__hits')[:10]
+    print(userdataobjects)
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
