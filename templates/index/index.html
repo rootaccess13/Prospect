@@ -465,6 +465,7 @@
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 sm:w-full overflow-hidden">
                 
                 {% for data in followobj %}
+                    {% if data.gametype == 'valorant' %}
                     <div class="overflow-hidden">
                         <a href="#" data-popover-target="{{data.gametype}}{{data.ign}}" data-popover-placement="bottom" data-popover-trigger="click" class="flex flex-col p-2 w-full items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-sm hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
                             <img class="object-cover mt-2 w-28 rounded-lg md:h-auto md:w-24 md:rounded-none md:rounded-l-lg" src="{{data.avatar.url}}" alt="">
@@ -543,6 +544,7 @@
                         </div>
                         <div data-popper-arrow></div>
                     </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>

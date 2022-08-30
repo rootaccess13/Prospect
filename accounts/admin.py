@@ -10,13 +10,13 @@ class CustomUserAdmin(admin.ModelAdmin):
     search_fields = ('email', 'ign', 'slug')
 
 
-@ admin.register(ProfileHighlights)
+@admin.register(ProfileHighlights)
 class ProfileHighlightsAdmin(admin.ModelAdmin):
     list_display = ('user', 'highlight')
     search_fields = ('user', 'highlight')
 
 
-@ admin.register(ReviewUser)
+@admin.register(ReviewUser)
 class ReviewUserAdmin(admin.ModelAdmin):
     list_display = ('user', 'author', 'review', 'avatar')
     search_fields = ('user', 'author', 'review', 'avatar')

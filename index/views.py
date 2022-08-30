@@ -1,6 +1,5 @@
-from pyexpat import model
+
 from django.contrib.auth import login, authenticate, logout
-from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_str
@@ -16,19 +15,18 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required as lr
 from django.utils import timezone
-from accounts.forms import SignUpForm
+from accounts.forms import LoginForm, SignUpForm
 from accounts.tokens import account_activation_token
 from django.urls import reverse
 from django.conf import settings
 from accounts.models import CustomUser, ProfileHighlights, ReviewUser
 from django.http import Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import View
-from hitcount.views import HitCountDetailView
-from hitcount.models import HitCount
-from hitcount.views import HitCountMixin
+from django.views.generic import View, DetailView, ListView
 from accounts.forms import AvatarForm
 from django.conf import settings
+# import HitCount mixin
+from hitcount.views import HitCountDetailView
 from django.utils.http import urlsafe_base64_encode
 from django.template.defaulttags import register
 from django.views.decorators.http import require_http_methods
@@ -37,14 +35,203 @@ from django.views.decorators.cache import cache_page
 from django.db.models import Count
 
 
+class IndexView(ListView):
+    model = CustomUser
+    template_name = 'index/index.html'
+    context_object_name = 'userdata'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['userdata'] = CustomUser.objects.exclude(is_staff=True)
+        context['followobj'] = CustomUser.objects.all(
+        ).distinct().order_by('-follower')[:10]
+        return context
+
+
+class SignupView(View):
+
+    def get(self, request):
+        form = SignUpForm()
+        return render(request, 'accounts/signup.html', {'form': form})
+
+    def post(self, request):
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            rememberuser = form.cleaned_data.get('remember')
+            if not rememberuser:
+                request.session.set_expiry(0)
+                request.session.modified = True
+                print(request.session.get_expiry_date())
+            user = form.save(commit=False)
+            user.is_active = False
+            if not rememberuser:
+                user.rememberuser = True
+            user.save()
+            current_site = get_current_site(request)
+            subject = 'Please Activate Your Account'
+
+            message = render_to_string('accounts/activation_request.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email])
+            messages.add_message(
+                request, messages.SUCCESS, 'Account created successfully. Please check your email to activate your account.')
+            return redirect('index')
+        else:
+            # raise form messages
+            messages.add_message(request, messages.ERROR,
+                                 'Sign up failed, please try again.')
+            return redirect('index')
+
+
+class SignInView(View):
+    def get(self, request):
+        form = LoginForm()
+        return render(request, 'accounts/signin.html', {'form': form})
+
+    def post(self, request):
+        username = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.add_message(request, messages.ERROR,
+                                 'Sign in failed, please try again.')
+            return redirect('index')
+
+
+class CreateReviewView(LoginRequiredMixin, View):
+    login_url = 'login'
+    redirect_field_name = 'signin'
+
+    def post(self, request, slug):
+        user = CustomUser.objects.get(slug=slug)
+        review = request.POST['reviews']
+        if review:
+            ReviewUser.objects.create(
+                user=user, author=request.user.ign, review=review, avatar=request.user.avatar)
+        messages.add_message(request, messages.SUCCESS,
+                             'Review created successfully.')
+        return redirect('userinfo', slug=slug)
+
+
+class SignUpActivateView(View):
+    def get(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = CustomUser.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+            user = None
+
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.signup_confirmation = True
+            user.last_login = timezone.now()
+            user.save()
+            login(request, user)
+
+            return redirect('completeinfo', pk=user.pk)
+        else:
+            return render(request, 'accounts/activation_invalid.html')
+
+
+class CompleteInfoView(LoginRequiredMixin, View):
+    login_url = 'index'
+    redirect_field_name = 'info'
+
+    def get(self, request, pk):
+        user = CustomUser.objects.get(pk=pk)
+        form = AvatarForm(instance=user)
+        return render(request, 'accounts/complete_profile.html', {'user': user, 'form': form})
+
+    def post(self, request, pk):
+        user = CustomUser.objects.get(pk=pk)
+        form = AvatarForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            user.gamerole = request.POST['gamerole']
+            user.gametype = request.POST['gametype']
+            user.formerteam = request.POST['formerteam']
+            user.save()
+            form.save()
+            messages.add_message(request, messages.SUCCESS,
+                                 'Profile updated successfully.')
+            return redirect('index')
+        else:
+            messages.error(request, form.errors)
+            return redirect('completeinfo', pk=user.pk)
+
+
+class UserDetailView(LoginRequiredMixin, DetailView):
+    model = CustomUser
+    template_name = 'accounts/profile_view.html'
+    context_object_name = 'userinfos'
+    slug_field = 'slug'
+    count_hit = True
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile_highlights'] = ProfileHighlights.objects.filter(
+            user=self.object)
+        context['reviewuserdata'] = ReviewUser.objects.filter(
+            user=self.object).order_by('-date')
+        context['review_count'] = ReviewUser.objects.filter(
+            user=self.object).count()
+        context['following_count'] = self.object.follower.count()
+        context['follower_count'] = self.object.following.count()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        user = self.get_object()
+        highlight = request.POST['highlight']
+        if highlight and 'youtube' in highlight:
+            ProfileHighlights.objects.create(
+                user=user, highlight=highlight)
+            messages.add_message(request, messages.SUCCESS,
+                                 'Highlight added successfully.')
+            return redirect('userinfo', user.slug)
+        else:
+            messages.add_message(request, messages.ERROR,
+                                 'Highlights upload failed, invalid url. Please try again.')
+        return redirect('userinfo', user.slug)
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.add_message(request, messages.ERROR,
+                                 'You need to be logged in to view this page.')
+        return super().dispatch(request, *args, **kwargs)
+
+
+class UserFollowView(LoginRequiredMixin, View):
+    login_url = 'signin'
+    # redirect_field_name = 'index'
+
+    def get(self, request, loggedinuser, pk):
+        user = CustomUser.objects.get(pk=pk)
+        if request.user in user.follower.all():
+            user.follower.remove(request.user)
+            messages.add_message(request, messages.SUCCESS,
+                                 'You unfollowed ' + user.ign + '.')
+            return redirect('index')
+        else:
+            user.follower.add(request.user)
+            messages.add_message(request, messages.SUCCESS,
+                                 'You followed ' + user.ign + '.')
+        return redirect('userinfo', user.slug)
+
+
 def signup(request):
     # Get CustomUser object except for staff users
     userdata = CustomUser.objects.exclude(is_staff=True)
     userdataobjects = userdata.order_by('-hit_count_generic__hits')[:10]
     # get top followed users in ascending order
-    followobjects = CustomUser.objects.exclude(
-        is_staff=True).order_by('-follower').distinct()
-    print(userdataobjects)
+    topfollowedusers = CustomUser.objects.all(
+    ).distinct().order_by('-follower')[:10]
+    print(topfollowedusers)
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -78,7 +265,7 @@ def signup(request):
             return redirect('index')
     else:
         form = SignUpForm()
-    return render(request, 'index/index.html', {'form': form, 'userdata': userdataobjects, 'followobj': followobjects})
+    return render(request, 'index/index.html', {'form': form, 'userdata': userdataobjects, 'followobj': topfollowedusers})
 
 
 @require_http_methods(["GET", "POST"])
@@ -119,68 +306,9 @@ def followToggle(request, pk, loggedinuser):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def oauthtiktok(request):
-    # Math.random().toString(36).substring(2)
-    csrf_state = request.GET.get('csrfmiddlewaretoken')
-    params = {
-        'client_key': 'awf17r3fssnrj8za',
-        'redirect_uri': 'https://samateurprospect.herokuapp.com/',
-        'response_type': 'code',
-        'scope': 'user.info.basic',
-        'state': csrf_state,
-    }
-    url = 'https://tiktok.com/oauth/authorize?client_key={client_key}&redirect_uri={redirect_uri}&response_type={response_type}&scope={scope}&state={state}'.format(
-        **params)
-    print(url)
-    return redirect(url)
-
-
 def logout_view(request):
     logout(request)
     return redirect('index')
-
-
-class UserDetailView(LoginRequiredMixin, HitCountDetailView, View):
-    model = CustomUser
-    template_name = 'accounts/profile_view.html'
-    context_object_name = 'userinfos'
-    slug_field = 'slug'
-    count_hit = True
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['profile_highlights'] = ProfileHighlights.objects.filter(
-            user=self.object)
-        context['reviewuserdata'] = ReviewUser.objects.filter(
-            user=self.object).order_by('-date')
-        context['review_count'] = ReviewUser.objects.filter(
-            user=self.object).count()
-        context['following_count'] = self.object.follower.count()
-        context['follower_count'] = self.object.following.count()
-
-        return context
-
-        return context
-
-    def post(self, request, *args, **kwargs):
-        user = self.get_object()
-        highlight = request.POST['highlight']
-        if highlight and 'youtube' in highlight:
-            ProfileHighlights.objects.create(
-                user=user, highlight=highlight)
-            messages.add_message(request, messages.SUCCESS,
-                                 'Highlight added successfully.')
-            return redirect('userinfo', user.slug)
-        else:
-            messages.add_message(request, messages.ERROR,
-                                 'Highlights upload failed, invalid url. Please try again.')
-        return redirect('userinfo', user.slug)
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            messages.add_message(request, messages.ERROR,
-                                 'You need to be logged in to view this page.')
-        return super().dispatch(request, *args, **kwargs)
 
 
 @lr
@@ -223,29 +351,6 @@ def activate(request, uidb64, token):
         return redirect('completeinfo', pk=user.pk)
     else:
         return render(request, 'accounts/activation_invalid.html')
-
-
-@lr
-@require_http_methods(["GET", "POST"])
-def completeProfile(request, pk):
-    user = CustomUser.objects.get(pk=pk)
-    if request.method == 'POST':
-        form = AvatarForm(request.POST, request.FILES, instance=user)
-        if form.is_valid():
-            user.gamerole = request.POST['gamerole']
-            user.gametype = request.POST['gametype']
-            user.formerteam = request.POST['formerteam']
-            user.save()
-            form.save()
-            messages.add_message(request, messages.SUCCESS,
-                                 'Profile updated successfully.')
-            return redirect('index')
-        else:
-            messages.error(request, form.errors)
-            return redirect('completeinfo', pk=user.pk)
-    else:
-        form = AvatarForm(instance=user)
-    return render(request, 'accounts/complete_profile.html', {'form': form, 'user': user})
 
 
 def success(request):

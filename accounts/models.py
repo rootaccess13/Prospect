@@ -10,6 +10,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.utils.text import slugify
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.urls import reverse
+import uuid
 
 
 class CustomUserManager(BaseUserManager):
@@ -46,6 +47,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(_('email address'), unique=True)
     ign = models.CharField(max_length=50, blank=True, null=True)
     avatar = models.ImageField(
@@ -72,6 +74,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['ign', 'avatar']
 
     objects = CustomUserManager()
+
+    class Meta:
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
+        ordering = ('-date_joined',)
 
     def __str__(self):
         return self.email
@@ -112,6 +119,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.hit_count_generic.count()
 
     def get_follower_count(self):
+        # exclude is_staff and is_superuser
         return self.follower.count()
 
 
