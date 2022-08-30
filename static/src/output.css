@@ -1191,6 +1191,10 @@ input:checked + .toggle-bg {
   bottom: 0px;
 }
 
+.top-5 {
+  top: 1.25rem;
+}
+
 .z-0 {
   z-index: 0;
 }

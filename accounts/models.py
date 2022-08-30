@@ -57,6 +57,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         "self", blank=True, symmetrical=False, related_name='prodpect_followers')
     following = models.ManyToManyField(
         "self", blank=True, symmetrical=False, related_name='prodpect_following')
+    # num_follower = models.PositiveIntegerField(default=0)
     hit_count_generic = GenericRelation(
         HitCount, object_id_field='object_pk', related_query_name='hit_count_generic_relation')
     slug = models.SlugField(unique=True, max_length=100, blank=True, null=True)
@@ -80,6 +81,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             self.slug = slugify(self.ign).replace(' ', '-')
         # convert white space to hyphen
         self.ign = self.ign.replace(' ', '-')
+
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -109,14 +111,27 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def count_hit(self):
         return self.hit_count_generic.count()
 
+    def get_follower_count(self):
+        return self.follower.count()
+
 
 class ProfileHighlights(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     highlight = models.URLField(max_length=200, blank=True, null=True,
                                 default='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+    likes = models.ManyToManyField(
+        CustomUser, blank=True, related_name='view_likes')
+    comments = models.ManyToManyField(
+        CustomUser, blank=True, related_name='view_comments')
 
     def __str__(self):
         return self.user.ign + ' ' + self.highlight
+
+    def get_total_likes(self):
+        return self.likes.count()
+
+    def get_comments(self):
+        return self.comments.all()
 
     def save(self, *args, **kwargs):
         # get parameters from url

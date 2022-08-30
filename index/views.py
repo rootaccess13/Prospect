@@ -1,3 +1,4 @@
+from pyexpat import model
 from django.contrib.auth import login, authenticate, logout
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
@@ -32,15 +33,17 @@ from django.utils.http import urlsafe_base64_encode
 from django.template.defaulttags import register
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.cache import cache_page
+# import models Count
+from django.db.models import Count
 
 
 def signup(request):
     # Get CustomUser object except for staff users
     userdata = CustomUser.objects.exclude(is_staff=True)
-    # order by highest hit count
-
-    # get 10 objects from CustomUser object
     userdataobjects = userdata.order_by('-hit_count_generic__hits')[:10]
+    # get top followed users in ascending order
+    followobjects = CustomUser.objects.exclude(
+        is_staff=True).order_by('-follower').distinct()
     print(userdataobjects)
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -75,7 +78,7 @@ def signup(request):
             return redirect('index')
     else:
         form = SignUpForm()
-    return render(request, 'index/index.html', {'form': form, 'userdata': userdataobjects})
+    return render(request, 'index/index.html', {'form': form, 'userdata': userdataobjects, 'followobj': followobjects})
 
 
 @require_http_methods(["GET", "POST"])
