@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-63*=$rn1*&9*z!cmn0=t-0jiy-q!n9dz3!o@tiv+t3g^j6#2$q'
 
 DEBUG = True
-ALLOWED_HOSTS = ['amateurprospect.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['amateurprospect.herokuapp.com', '127.0.0.1', 'localhost']
 
 
 INSTALLED_APPS = [
@@ -45,8 +45,8 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 SITE_ID = 1
-ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_ADAPTER = 'AmateurPlayer.adapter.MyAccountAdapter'
+SOCIALACCOUNT_ADAAPTER = 'AmateurPlayer.adapter.MySocialAccountAdapter'
 LOGIN_REDIRECT_URL = 'completeinfo'
 SOCIAL_AUTH_FACEBOOK_KEY = '1710584092694547'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = '38b2b6886d496266deb16d8c90ee36ea'  # app key
