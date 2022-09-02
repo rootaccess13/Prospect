@@ -33,7 +33,12 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     '''
 
     def pre_social_login(self, request, sociallogin):
-        pass    # TODOFuture: To perform some actions right after successful login
+        # check if user is already had an account
+        if sociallogin.is_existing:
+            print("Existing User : " + sociallogin.user.ign)
+        else:
+            print("New User : " + sociallogin.user.ign)
+        return None
 
 
 @receiver(pre_social_login)
@@ -46,11 +51,20 @@ def link_to_local_user(sender, request, sociallogin, **kwargs):
     * https://github.com/pennersr/django-allauth/issues/215
 
     '''
-    email_address = sociallogin.account.extra_data['email']
-    User = get_user_model()
-    users = User.objects.filter(email=email_address)
-    if users:
-        # allauth.account.app_settings.EmailVerificationMethod
-        perform_login(request, users[0], email_verification='optional')
+    # get user model
+    user_model = get_user_model()
+    # get email from sociallogin
+    email = sociallogin.account.extra_data.get('email')
+    # get user with this email
+    user = user_model.objects.filter(email=email).first()
+    # if user exists
+    if user:
+        # login user
+        perform_login(request, user, email_verification='none')
+        # redirect to home
         raise ImmediateHttpResponse(
             redirect(settings.LOGIN_REDIRECT_URL.format(pk=request.user.pk)))
+    # if user does not exist
+    else:
+        # redirect to signup page
+        raise ImmediateHttpResponse(redirect('/'))
