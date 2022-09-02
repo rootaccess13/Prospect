@@ -1,5 +1,5 @@
 
-from xml.etree.ElementInclude import include
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -8,8 +8,10 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),  # new
     path('', include('index.urls')),
-    path('account/', include('accounts.urls')),
+    path('account_test/', include('accounts.urls')),
+
 ]
 urlpatterns += staticfiles_urlpatterns()
 if settings.DEBUG:

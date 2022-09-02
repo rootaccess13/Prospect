@@ -84,11 +84,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.ign).replace(' ', '-')
-        # convert white space to hyphen
-        self.ign = self.ign.replace(' ', '-')
-
-        super().save(*args, **kwargs)
+            # replace @gmail.com with empty string
+            self.slug = slugify(self.email.replace('@gmail.com', ''))
+            self.ign = self.email.replace('@gmail.com', '')
+        super(CustomUser, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('userinfo', args=[self.slug])

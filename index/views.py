@@ -39,6 +39,7 @@ class IndexView(ListView):
     model = CustomUser
     template_name = 'index/index.html'
     context_object_name = 'userdata'
+    count_hit = True
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
