@@ -39,6 +39,7 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
         else:
             print("New User : " + sociallogin.user.ign)
         return None
+        return super().pre_social_login(request, sociallogin)
 
 
 @receiver(pre_social_login)
@@ -63,7 +64,7 @@ def link_to_local_user(sender, request, sociallogin, **kwargs):
         perform_login(request, user, email_verification='none')
         # redirect to home
         raise ImmediateHttpResponse(
-            redirect(settings.LOGIN_REDIRECT_URL.format(pk=request.user.pk)))
+            redirect('completeinfo', pk=request.user.pk))
     # if user does not exist
     else:
         # redirect to signup page
