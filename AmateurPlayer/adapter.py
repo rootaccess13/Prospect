@@ -35,10 +35,9 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     def pre_social_login(self, request, sociallogin):
         # check if user is already had an account
         if sociallogin.is_existing:
-            print("Existing User : " + sociallogin.user.ign)
+            print("Existing User : " + str(sociallogin.user.ign))
         else:
-            print("New User : " + sociallogin.user.ign)
-        return None
+            print("New User : " + str(sociallogin.user.ign))
         return super().pre_social_login(request, sociallogin)
 
 

@@ -48,8 +48,8 @@ SITE_ID = 1
 ACCOUNT_ADAPTER = 'AmateurPlayer.adapter.MyAccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'AmateurPlayer.adapter.MySocialAccountAdapter'
 LOGIN_REDIRECT_URL = 'completeinfo'
-# SOCIAL_AUTH_FACEBOOK_KEY = '672294634404160'  # App ID
-# SOCIAL_AUTH_FACEBOOK_SECRET = 'd8eec0f4e1f192ca1a797fa1d5387c11'  # app key
+SOCIAL_AUTH_FACEBOOK_KEY = '1710584092694547'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = '38b2b6886d496266deb16d8c90ee36ea'  # app key
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
@@ -72,7 +72,17 @@ SOCIALACCOUNT_PROVIDERS = {
         'LOCALE_FUNC': 'path.to.callable',
         'VERIFIED_EMAIL': False,
         'VERSION': 'v13.0',
+    },
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
     }
+
 }
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
