@@ -24,3 +24,4 @@ boto3
 django-storages
 djangorestframework==3.13.1
 django-allauth==0.43.0
+social-auth-app-django

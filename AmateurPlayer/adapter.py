@@ -67,5 +67,7 @@ def link_to_local_user(sender, request, sociallogin, **kwargs):
             redirect('completeinfo', pk=request.user.pk))
     # if user does not exist
     else:
+        # log error message
+
         # redirect to signup page
         raise ImmediateHttpResponse(redirect('/'))
