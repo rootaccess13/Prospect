@@ -33,13 +33,11 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'compressor',
     'hitcount',
-    'social_django'
 
 
 ]
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
-    'social_core.backends.facebook.FacebookOAuth2',
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
@@ -50,36 +48,32 @@ SITE_ID = 1
 ACCOUNT_ADAPTER = 'AmateurPlayer.adapter.MyAccountAdapter'
 SOCIALACCOUNT_ADAAPTER = 'AmateurPlayer.adapter.MySocialAccountAdapter'
 LOGIN_REDIRECT_URL = 'completeinfo'
-SOCIAL_AUTH_FACEBOOK_KEY = '672294634404160'  # App ID
-SOCIAL_AUTH_FACEBOOK_SECRET = 'd8eec0f4e1f192ca1a797fa1d5387c11'  # app key
+# SOCIAL_AUTH_FACEBOOK_KEY = '672294634404160'  # App ID
+# SOCIAL_AUTH_FACEBOOK_SECRET = 'd8eec0f4e1f192ca1a797fa1d5387c11'  # app key
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
         'METHOD': 'oauth2',
-        'SCOPE': ['email', 'public_profile', 'user_friends'],
+        'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
+        'SCOPE': ['email', 'public_profile'],
         'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
         'INIT_PARAMS': {'cookie': True},
         'FIELDS': [
             'id',
-            'email',
+            'first_name',
+            'last_name',
+            'middle_name',
             'name',
+            'name_format',
+            'picture',
+            'short_name'
         ],
         'EXCHANGE_TOKEN': True,
         'LOCALE_FUNC': 'path.to.callable',
         'VERIFIED_EMAIL': False,
-        'VERSION': 'v2.8',
-    },
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    },
+        'VERSION': 'v13.0',
+    }
 }
-
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -88,7 +82,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
@@ -107,8 +100,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',  # <--
-                'social_django.context_processors.login_redirect',
             ],
         },
     },
