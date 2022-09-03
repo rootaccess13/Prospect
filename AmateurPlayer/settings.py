@@ -50,8 +50,8 @@ SITE_ID = 1
 ACCOUNT_ADAPTER = 'AmateurPlayer.adapter.MyAccountAdapter'
 SOCIALACCOUNT_ADAAPTER = 'AmateurPlayer.adapter.MySocialAccountAdapter'
 LOGIN_REDIRECT_URL = 'completeinfo'
-SOCIAL_AUTH_FACEBOOK_KEY = '1710584092694547'  # App ID
-SOCIAL_AUTH_FACEBOOK_SECRET = '38b2b6886d496266deb16d8c90ee36ea'  # app key
+SOCIAL_AUTH_FACEBOOK_KEY = '672294634404160'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = 'd8eec0f4e1f192ca1a797fa1d5387c11'  # app key
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
         'METHOD': 'oauth2',
