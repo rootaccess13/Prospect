@@ -71,7 +71,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'EXCHANGE_TOKEN': True,
         'LOCALE_FUNC': 'path.to.callable',
         'VERIFIED_EMAIL': False,
-        'VERSION': 'v13.0',
+        'VERSION': 'v14.0',
     },
     'google': {
         'SCOPE': [
