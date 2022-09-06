@@ -44,7 +44,7 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             request, sociallogin, form)
         user.ign = sociallogin.account.extra_data['name']
         user.save()
-        return super().save_user(request, sociallogin, form)
+        return user
 
     def pre_social_login(self, request, sociallogin):
         print("Signed In : " + sociallogin.account.extra_data['name'])
