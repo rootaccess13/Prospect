@@ -44,19 +44,12 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
 @receiver(pre_social_login)
 def link_to_local_user(sender, request, sociallogin, **kwargs):
     if sociallogin.account.provider == 'facebook':
-        # check if user is already had an account
-        if sociallogin.is_existing:
-            print("Existing User : " + str(sociallogin.user.email))
-            return ImmediateHttpResponse(redirect(settings.LOGIN_REDIRECT_URL, pk=request.user.pk))
-        else:
-            print("New User : " + str(sociallogin.user.email))
-            return ImmediateHttpResponse(redirect(settings.LOGIN_REDIRECT_URL, pk=request.user.pk))
-
-    if sociallogin.account.provider == 'google':
-        email = sociallogin.account.extra_data.get('email')
-        if email:
-            try:
-                user = get_user_model().objects.get(email=email)
-                sociallogin.connect(request, user)
-            except get_user_model().DoesNotExist:
-                pass
+        # save user data
+        user = sociallogin.user
+        user.email = sociallogin.account.extra_data['email']
+        user.ign = sociallogin.account.extra_data['name']
+        user.save()
+        # perform login
+        perform_login(request, user, email_verification='none')
+        # redirect to complete info page
+        raise ImmediateHttpResponse(redirect('/info/{pk}/'.format(pk=user.pk)))
