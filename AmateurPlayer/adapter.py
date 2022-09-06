@@ -43,17 +43,18 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
 
 @receiver(pre_social_login)
 def pre_social_login(sender, request, sociallogin, **kwargs):
-    # Handle facebook login
-    if sociallogin.account.provider == 'facebook':
-        # get user data from facebook
-        extra_data = sociallogin.account.extra_data
-        # get facebook id
-        facebook_id = extra_data['id']
-        # get facebook email
-        facebook_email = extra_data['email']
-        print("Facebook ID : " + facebook_id)
-        print("Facebook Email : " + facebook_email)
-        # get facebook name
-        facebook_name = extra_data['name']
-        # get facebook picture
-        facebook_picture = extra_data['picture']['data']['url']
+    # Get email from sociallogin
+    email = sociallogin.account.extra_data.get('email')
+    # Get user model
+    User = get_user_model()
+    # Check if user exists
+    try:
+        user = User.objects.get(email=email)
+        # If user exists, perform login
+        perform_login(request, user, email_verification='none')
+        # Redirect to home page
+        raise ImmediateHttpResponse(redirect('/'))
+    except User.DoesNotExist:
+        # If user doesn't exist, redirect to signup page
+        raise ImmediateHttpResponse(
+            redirect(settings.LOGIN_REDIRECT_URL, pk=request.user.pk))
