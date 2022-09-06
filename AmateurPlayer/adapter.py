@@ -40,6 +40,12 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             print("New User : " + str(sociallogin.user.email))
         return super().pre_social_login(request, sociallogin)
 
+    def get_facebook_login_redirect_url(self, request):
+        path = "/info/{pk}/"
+        if request.user.is_authenticated:
+            path = path.format(pk=request.user.pk)
+        return path.format(pk=request.user.pk)
+
 
 @receiver(pre_social_login)
 def link_to_local_user(sender, request, sociallogin, **kwargs):
