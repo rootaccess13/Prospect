@@ -28,43 +28,30 @@ class MyAccountAdapter(DefaultAccountAdapter):
 
 
 class MySocialAccountAdapter(DefaultSocialAccountAdapter):
+    '''
+    Overrides allauth.socialaccount.adapter.DefaultSocialAccountAdapter.pre_social_login to 
+    perform some actions right after successful login
+    '''
 
     def pre_social_login(self, request, sociallogin):
-        # check if user is already had an account
-        if request.user.is_authenticated:
-            sociallogin.connect(request, request.user)
-            raise ImmediateHttpResponse(
-                redirect("/info/{pk}/".format(pk=request.user.pk)))
-
-        return super().pre_social_login(request, sociallogin)
-
-    def get_connect_redirect_url(self, request, socialaccount):
-        path = "/info/{pk}/"
-        # check if user is already had an account
-        if request.user.is_authenticated:
-            path = path.format(pk=request.user.pk)
-        return path.format(pk=request.user.pk)
-
-    def get_login_redirect_url(self, request):
-        path = "/"
-        print("Signed In : " + request.user.ign)
-        return path
-
-    def populate_user(self, request, sociallogin, data):
-        user = sociallogin.user
-        if user.email:
-            return
-        email = data.get('email')
-        if email:
-            user.email = email
-            return
-        user.email = data.get('username') + '@gmail.com'
-
-        return super().populate_user(request, sociallogin, data)
+        pass    # TODOFuture: To perform some actions right after successful login
 
 
-@receiver(user_signed_up)
-def user_signed_up_(request, user, **kwargs):
-    print("Signed Up : " + user.ign)
+@receiver(pre_social_login)
+def link_to_local_user(sender, request, sociallogin, **kwargs):
+    ''' Login and redirect
+    This is done in order to tackle the situation where user's email retrieved
+    from one provider is different from already existing email in the database
+    (e.g facebook and google both use same email-id). Specifically, this is done to
+    tackle following issues:
+    * https://github.com/pennersr/django-allauth/issues/215
 
-    return redirect("/info/{pk}/".format(pk=user.pk))
+    '''
+    email_address = sociallogin.account.extra_data['email']
+    User = get_user_model()
+    users = User.objects.filter(email=email_address)
+    if users:
+        # allauth.account.app_settings.EmailVerificationMethod
+        perform_login(request, users[0], email_verification='optional')
+        raise ImmediateHttpResponse(
+            redirect(settings.LOGIN_REDIRECT_URL.format(pk=users[0].pk)))
