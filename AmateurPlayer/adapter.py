@@ -9,13 +9,13 @@ from django.dispatch import receiver
 from django.shortcuts import redirect
 from django.conf import settings
 import json
-from allauth.account.signals import user_signed_up
 
 
 class MyAccountAdapter(DefaultAccountAdapter):
 
     def get_signup_redirect_url(self, request):
         path = "/info/{pk}/"
+        # check if user is already had an account
         if request.user.is_authenticated:
             path = path.format(pk=request.user.pk)
         return path.format(pk=request.user.pk)
@@ -32,27 +32,41 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     perform some actions right after successful login
     '''
 
-    def new_user(self, request, sociallogin):
-        user = super(MySocialAccountAdapter, self).new_user(
-            request, sociallogin)
-        user.ign = sociallogin.account.extra_data['name']
-        user.save()
-        # redirect to the complete profile page
-        return redirect('/info/{pk}/'.format(pk=user.pk))
-
-    def save_user(self, request, sociallogin, form=None):
-        user = sociallogin.user
-        if not user.pk:
-            user.save()
-        else:
-            user.save(update_fields=['last_login'])
-        return user
-
     def pre_social_login(self, request, sociallogin):
-        print("Signed In : " + sociallogin.account.extra_data['name'])
-        return super(MySocialAccountAdapter, self).pre_social_login(request, sociallogin)
+        # check if user is already had an account
+        if sociallogin.is_existing:
+            print("Existing User : " + str(sociallogin.user.email))
+        else:
+            print("New User : " + str(sociallogin.user.email))
+        return super().pre_social_login(request, sociallogin)
 
-    def get_login_redirect_url(self, request):
-        path = "/"
-        print("Signed In : " + request.user.ign)
-        return path
+
+@receiver(pre_social_login)
+def link_to_local_user(sender, request, sociallogin, **kwargs):
+    ''' Login and redirect
+    This is done in order to tackle the situation where user's email retrieved
+    from one provider is different from already existing email in the database
+    (e.g facebook and google both use same email-id). Specifically, this is done to
+    tackle following issues:
+    * https://github.com/pennersr/django-allauth/issues/215
+
+    '''
+    # get user model
+    user_model = get_user_model()
+    # get email from sociallogin
+    email = sociallogin.account.extra_data.get('email')
+    # get user with this email
+    user = user_model.objects.filter(email=email).first()
+    # if user exists
+    if user:
+        # login user
+        perform_login(request, user, email_verification='none')
+        # redirect to home
+        raise ImmediateHttpResponse(
+            redirect('completeinfo', pk=request.user.pk))
+    # if user does not exist
+    else:
+        # log error message
+
+        # redirect to signup page
+        raise ImmediateHttpResponse(redirect('/'))
