@@ -40,6 +40,21 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             print("New User : " + str(sociallogin.user.email))
         return super().pre_social_login(request, sociallogin)
 
+    def save_user(self, request, sociallogin, form=None):
+        user = super().save_user(request, sociallogin, form)
+        if not user.is_active:
+            user.is_active = True
+            user.save()
+        return user
+
+    def new_user(self, request, sociallogin):
+        user = super().new_user(request, sociallogin)
+        user.is_active = True
+        user.ign = sociallogin.account.extra_data['name']
+        user.email = sociallogin.account.extra_data['email']
+        user.save()
+        return user
+
 
 @receiver(pre_social_login)
 def link_to_local_user(sender, request, sociallogin, **kwargs):
