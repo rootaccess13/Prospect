@@ -27,33 +27,74 @@ class MyAccountAdapter(DefaultAccountAdapter):
 
 
 class MySocialAccountAdapter(DefaultSocialAccountAdapter):
-    '''
-    Overrides allauth.socialaccount.adapter.DefaultSocialAccountAdapter.pre_social_login to 
-    perform some actions right after successful login
-    '''
+
+    def get_connect_redirect_url(self, request, socialaccount):
+        path = "/info/{pk}/"
+        # check if user is already had an account
+        if request.user.is_authenticated:
+            path = path.format(pk=request.user.pk)
+        return path.format(pk=request.user.pk)
+
+    def get_login_redirect_url(self, request):
+        path = "/"
+        print("Signed In : " + request.user.ign)
+        return path
 
     def pre_social_login(self, request, sociallogin):
+        if sociallogin.account.provider == 'google':
+            # get user model
+            User = get_user_model()
+            # get user email
+            email = sociallogin.account.extra_data['email']
+            # get user by email
+            user = User.objects.filter(email=email).first()
+            # check if user is already had an account
+            if user:
+                # login user
+                perform_login(request, user, email_verification='optional')
+                # redirect to home page
+                raise ImmediateHttpResponse(redirect('/'))
+        if sociallogin.account.provider == 'facebook':
+            # get user model
+            User = get_user_model()
+            # get user email
+            email = sociallogin.account.extra_data['email']
+            # get user by email
+            user = User.objects.filter(email=email).first()
+            # check if user is already had an account
+            if user:
+                # login user
+                perform_login(request, user, email_verification='optional')
+                # redirect to home page
+                raise ImmediateHttpResponse(redirect('/'))
+
+    def populate_user(self, request, sociallogin, data):
+        # get user model
+        User = get_user_model()
+        # get user email
+        email = sociallogin.account.extra_data['email']
+        # get user by email
+        user = User.objects.filter(email=email).first()
         # check if user is already had an account
-        if sociallogin.is_existing:
-            print("Existing User : " + str(sociallogin.user.email))
-        else:
-            print("New User : " + str(sociallogin.user.email))
-        return super().pre_social_login(request, sociallogin)
+        if user:
+            # set user
+            sociallogin.connect(request, user)
+            # redirect to home page
+            raise ImmediateHttpResponse(redirect('/'))
 
     def save_user(self, request, sociallogin, form=None):
-        user = super().save_user(request, sociallogin, form)
-        if not user.is_active:
-            user.is_active = True
-            user.save()
-        return user
-
-    def new_user(self, request, sociallogin):
-        user = super().new_user(request, sociallogin)
-        user.is_active = True
-        user.ign = sociallogin.account.extra_data['name']
-        user.email = sociallogin.account.extra_data['email']
-        user.save()
-        return user
+        # get user model
+        User = get_user_model()
+        # get user email
+        email = sociallogin.account.extra_data['email']
+        # get user by email
+        user = User.objects.filter(email=email).first()
+        # check if user is already had an account
+        if user:
+            # set user
+            sociallogin.connect(request, user)
+            # redirect to home page
+            raise ImmediateHttpResponse(redirect('/'))
 
 
 @receiver(pre_social_login)
