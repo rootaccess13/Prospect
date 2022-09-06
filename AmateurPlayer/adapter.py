@@ -55,6 +55,8 @@ def pre_social_login(sender, request, sociallogin, **kwargs):
         # Redirect to home page
         raise ImmediateHttpResponse(redirect('/'))
     except User.DoesNotExist:
-        perform_login(request, sociallogin.user, email_verification='none')
-        raise ImmediateHttpResponse(
-            redirect('/info/{pk}/'.format(pk=sociallogin.user.pk)))
+        # If user does not exist, create a new user and perform login
+        user = User.objects.create_user(email=email)
+        perform_login(request, user, email_verification='none')
+        # Redirect to complete profile page
+        raise ImmediateHttpResponse(redirect('/info/{pk}/'.format(pk=user.pk)))
