@@ -40,6 +40,17 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             print("New User : " + str(sociallogin.user.email))
         return super().pre_social_login(request, sociallogin)
 
+    def user_signed_up(self, request, user, sociallogin):
+        if sociallogin:
+            if sociallogin.account.provider == 'facebook':
+                user.ign = sociallogin.account.extra_data['name']
+                user.email = sociallogin.account.extra_data['email']
+                user.save()
+            elif sociallogin.account.provider == 'google':
+                user.ign = sociallogin.account.extra_data['name']
+                user.email = sociallogin.account.extra_data['email']
+                user.save()
+
 
 @receiver(pre_social_login)
 def link_to_local_user(sender, request, sociallogin, **kwargs):
