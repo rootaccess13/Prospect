@@ -32,33 +32,25 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     perform some actions right after successful login
     '''
 
+    def new_user(self, request, sociallogin):
+        user = super(MySocialAccountAdapter, self).new_user(
+            request, sociallogin)
+        user.ign = sociallogin.account.extra_data['name']
+        user.save()
+        return user
+
+    def save_user(self, request, sociallogin, form=None):
+        user = super(MySocialAccountAdapter, self).save_user(
+            request, sociallogin, form)
+        user.ign = sociallogin.account.extra_data['name']
+        user.save()
+        return super().save_user(request, sociallogin, form)
+
     def pre_social_login(self, request, sociallogin):
-        # check if user is already had an account
-        if sociallogin.is_existing:
-            print("Existing User : " + str(sociallogin.user.email))
-        else:
-            print("New User : " + str(sociallogin.user.email))
-        return super().pre_social_login(request, sociallogin)
+        print("Signed In : " + sociallogin.account.extra_data['name'])
+        return super(MySocialAccountAdapter, self).pre_social_login(request, sociallogin)
 
-
-@receiver(pre_social_login)
-def pre_social_login(sender, request, sociallogin, **kwargs):
-    # Get email from sociallogin
-    email = sociallogin.account.extra_data.get('email')
-    print("Email : " + str(email))
-    # Get user model
-    User = get_user_model()
-    # Check if user exists
-    try:
-        user = User.objects.get(email=request.user.email)
-        # If user exists, perform login
-        perform_login(request, user, email_verification='none')
-        # Redirect to home page
-        raise ImmediateHttpResponse(redirect('/'))
-    except User.DoesNotExist:
-        # If user does not exist, create a new user and perform login
-        user = User.objects.create_user(
-            email=email, password=User.objects.make_random_password())
-        perform_login(request, user, email_verification='none')
-        # Redirect to complete profile page
-        raise ImmediateHttpResponse(redirect('/info/{pk}/'.format(pk=user.pk)))
+    def get_login_redirect_url(self, request):
+        path = "/"
+        print("Signed In : " + request.user.ign)
+        return path
