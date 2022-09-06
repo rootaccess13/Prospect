@@ -26,30 +26,34 @@ class MyAccountAdapter(DefaultAccountAdapter):
         return path
 
 
-# class MySocialAccountAdapter(DefaultSocialAccountAdapter):
-#     '''
-#     Overrides allauth.socialaccount.adapter.DefaultSocialAccountAdapter.pre_social_login to
-#     perform some actions right after successful login
-#     '''
+class MySocialAccountAdapter(DefaultSocialAccountAdapter):
+    '''
+    Overrides allauth.socialaccount.adapter.DefaultSocialAccountAdapter.pre_social_login to 
+    perform some actions right after successful login
+    '''
 
-#     def pre_social_login(self, request, sociallogin):
-#         # check if user is already had an account
-#         if sociallogin.is_existing:
-#             print("Existing User : " + str(sociallogin.user.email))
-#         else:
-#             print("New User : " + str(sociallogin.user.email))
-#         return super().pre_social_login(request, sociallogin)
+    def pre_social_login(self, request, sociallogin):
+        # check if user is already had an account
+        if sociallogin.is_existing:
+            print("Existing User : " + str(sociallogin.user.email))
+        else:
+            print("New User : " + str(sociallogin.user.email))
+        return super().pre_social_login(request, sociallogin)
 
 
-# @receiver(pre_social_login)
-# def link_to_local_user(sender, request, sociallogin, **kwargs):
-#     if sociallogin.account.provider == 'facebook':
-#         # save user data
-#         user = sociallogin.user
-#         user.email = sociallogin.account.extra_data['email']
-#         user.ign = sociallogin.account.extra_data['name']
-#         user.save()
-#         # perform login
-#         perform_login(request, user, email_verification='none')
-#         # redirect to complete info page
-#         raise ImmediateHttpResponse(redirect('/info/{pk}/'.format(pk=user.pk)))
+@receiver(pre_social_login)
+def pre_social_login(sender, request, sociallogin, **kwargs):
+    # Handle facebook login
+    if sociallogin.account.provider == 'facebook':
+        # get user data from facebook
+        extra_data = sociallogin.account.extra_data
+        # get facebook id
+        facebook_id = extra_data['id']
+        # get facebook email
+        facebook_email = extra_data['email']
+        print("Facebook ID : " + facebook_id)
+        print("Facebook Email : " + facebook_email)
+        # get facebook name
+        facebook_name = extra_data['name']
+        # get facebook picture
+        facebook_picture = extra_data['picture']['data']['url']
