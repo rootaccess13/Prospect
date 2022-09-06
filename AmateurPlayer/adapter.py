@@ -40,52 +40,23 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             print("New User : " + str(sociallogin.user.email))
         return super().pre_social_login(request, sociallogin)
 
-    def get_facebook_login_redirect_url(self, request):
-        path = "/info/{pk}/"
-        if request.user.is_authenticated:
-            path = path.format(pk=request.user.pk)
-        return path.format(pk=request.user.pk)
-
 
 @receiver(pre_social_login)
 def link_to_local_user(sender, request, sociallogin, **kwargs):
-    ''' Login and redirect
-    This is done in order to tackle the situation where user's email retrieved
-    from one provider is different from already existing email in the database
-    (e.g facebook and google both use same email-id). Specifically, this is done to
-    tackle following issues:
-    * https://github.com/pennersr/django-allauth/issues/215
+    if sociallogin.account.provider == 'facebook':
+        email = sociallogin.account.extra_data.get('email')
+        if email:
+            try:
+                user = get_user_model().objects.get(email=email)
+                sociallogin.connect(request, user)
+            except get_user_model().DoesNotExist:
+                pass
 
-    '''
-    # get user model
-    user_model = get_user_model()
-    # get email from sociallogin
-    email = sociallogin.account.extra_data.get('email')
-    # get user with this email
-    user = user_model.objects.filter(email=email).first()
-    # if user exists
-    if user:
-        # login user
-        perform_login(request, user, email_verification='none')
-        # redirect to home
-        raise ImmediateHttpResponse(
-            redirect('completeinfo', pk=request.user.pk))
-    # if user does not exist
-    else:
-        # log error message
-
-        # redirect to signup page
-        raise ImmediateHttpResponse(redirect('/'))
-
-
-# Handle facebook login and save data
-@receiver(user_signed_up)
-def user_signed_up_(request, user, **kwargs):
-    sociallogin = kwargs.get('sociallogin')
-    if sociallogin:
-        provider = sociallogin.account.provider
-        if provider == 'facebook':
-            data = sociallogin.account.extra_data
-            user.email = data.get('email')
-            user.ign = data.get('name')
-            user.save()
+    if sociallogin.account.provider == 'google':
+        email = sociallogin.account.extra_data.get('email')
+        if email:
+            try:
+                user = get_user_model().objects.get(email=email)
+                sociallogin.connect(request, user)
+            except get_user_model().DoesNotExist:
+                pass
