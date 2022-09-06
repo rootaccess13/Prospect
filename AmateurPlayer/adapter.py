@@ -16,7 +16,6 @@ class MyAccountAdapter(DefaultAccountAdapter):
 
     def get_signup_redirect_url(self, request):
         path = "/info/{pk}/"
-        # check if user is already had an account
         if request.user.is_authenticated:
             path = path.format(pk=request.user.pk)
         return path.format(pk=request.user.pk)
@@ -73,16 +72,14 @@ def link_to_local_user(sender, request, sociallogin, **kwargs):
         raise ImmediateHttpResponse(redirect('/'))
 
 
+# Handle facebook login and save data
 @receiver(user_signed_up)
-def user_signed_up(self, request, user, sociallogin=None, **kwargs):
+def user_signed_up_(request, user, **kwargs):
+    sociallogin = kwargs.get('sociallogin')
     if sociallogin:
-        if sociallogin.account.provider == 'facebook':
-            user.ign = sociallogin.account.extra_data['name']
-            user.email = sociallogin.account.extra_data['email']
-            print("New User : " + str(sociallogin.user.email))
-        if sociallogin.account.provider == 'google':
-            user.ign = sociallogin.account.extra_data['name']
-            user.email = sociallogin.account.extra_data['email']
-            print("New User : " + str(sociallogin.user.email))
-
-        user.save()
+        provider = sociallogin.account.provider
+        if provider == 'facebook':
+            data = sociallogin.account.extra_data
+            user.email = data.get('email')
+            user.ign = data.get('name')
+            user.save()
