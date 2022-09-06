@@ -79,8 +79,10 @@ def user_signed_up(self, request, user, sociallogin=None, **kwargs):
         if sociallogin.account.provider == 'facebook':
             user.ign = sociallogin.account.extra_data['name']
             user.email = sociallogin.account.extra_data['email']
-            user.save()
-        elif sociallogin.account.provider == 'google':
+            print("New User : " + str(sociallogin.user.email))
+        if sociallogin.account.provider == 'google':
             user.ign = sociallogin.account.extra_data['name']
             user.email = sociallogin.account.extra_data['email']
-            user.save()
+            print("New User : " + str(sociallogin.user.email))
+
+        user.save()
