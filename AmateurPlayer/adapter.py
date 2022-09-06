@@ -50,7 +50,7 @@ def pre_social_login(sender, request, sociallogin, **kwargs):
     User = get_user_model()
     # Check if user exists
     try:
-        user = User.objects.get(email=email)
+        user = User.objects.get(email=request.user.email)
         # If user exists, perform login
         perform_login(request, user, email_verification='none')
         # Redirect to home page
