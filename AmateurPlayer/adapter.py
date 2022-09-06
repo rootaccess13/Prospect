@@ -74,7 +74,7 @@ def link_to_local_user(sender, request, sociallogin, **kwargs):
 
 
 @receiver(user_signed_up)
-def user_signed_up(self, request, user, sociallogin):
+def user_signed_up(self, request, user, sociallogin=None, **kwargs):
     if sociallogin:
         if sociallogin.account.provider == 'facebook':
             user.ign = sociallogin.account.extra_data['name']
