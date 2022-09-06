@@ -45,6 +45,7 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
 def pre_social_login(sender, request, sociallogin, **kwargs):
     # Get email from sociallogin
     email = sociallogin.account.extra_data.get('email')
+    print("Email : " + email)
     # Get user model
     User = get_user_model()
     # Check if user exists
