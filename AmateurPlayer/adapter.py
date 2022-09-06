@@ -47,10 +47,10 @@ def link_to_local_user(sender, request, sociallogin, **kwargs):
         # check if user is already had an account
         if sociallogin.is_existing:
             print("Existing User : " + str(sociallogin.user.email))
-            return ImmediateHttpResponse(redirect(settings.LOGIN_REDIRECT_URL), pk=request.user.pk)
+            return ImmediateHttpResponse(redirect(settings.LOGIN_REDIRECT_URL, pk=request.user.pk))
         else:
             print("New User : " + str(sociallogin.user.email))
-            return ImmediateHttpResponse(redirect(settings.LOGIN_REDIRECT_URL), pk=request.user.pk)
+            return ImmediateHttpResponse(redirect(settings.LOGIN_REDIRECT_URL, pk=request.user.pk))
 
     if sociallogin.account.provider == 'google':
         email = sociallogin.account.extra_data.get('email')
