@@ -55,6 +55,6 @@ def pre_social_login(sender, request, sociallogin, **kwargs):
         # Redirect to home page
         raise ImmediateHttpResponse(redirect('/'))
     except User.DoesNotExist:
-        # If user doesn't exist, redirect to signup page
+        perform_login(request, sociallogin.user, email_verification='none')
         raise ImmediateHttpResponse(
-            redirect(settings.LOGIN_REDIRECT_URL, pk=request.user.pk))
+            redirect('/info/{pk}/'.format(pk=sociallogin.user.pk)))
