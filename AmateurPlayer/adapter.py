@@ -26,30 +26,30 @@ class MyAccountAdapter(DefaultAccountAdapter):
         return path
 
 
-class MySocialAccountAdapter(DefaultSocialAccountAdapter):
-    '''
-    Overrides allauth.socialaccount.adapter.DefaultSocialAccountAdapter.pre_social_login to 
-    perform some actions right after successful login
-    '''
+# class MySocialAccountAdapter(DefaultSocialAccountAdapter):
+#     '''
+#     Overrides allauth.socialaccount.adapter.DefaultSocialAccountAdapter.pre_social_login to
+#     perform some actions right after successful login
+#     '''
 
-    def pre_social_login(self, request, sociallogin):
-        # check if user is already had an account
-        if sociallogin.is_existing:
-            print("Existing User : " + str(sociallogin.user.email))
-        else:
-            print("New User : " + str(sociallogin.user.email))
-        return super().pre_social_login(request, sociallogin)
+#     def pre_social_login(self, request, sociallogin):
+#         # check if user is already had an account
+#         if sociallogin.is_existing:
+#             print("Existing User : " + str(sociallogin.user.email))
+#         else:
+#             print("New User : " + str(sociallogin.user.email))
+#         return super().pre_social_login(request, sociallogin)
 
 
-@receiver(pre_social_login)
-def link_to_local_user(sender, request, sociallogin, **kwargs):
-    if sociallogin.account.provider == 'facebook':
-        # save user data
-        user = sociallogin.user
-        user.email = sociallogin.account.extra_data['email']
-        user.ign = sociallogin.account.extra_data['name']
-        user.save()
-        # perform login
-        perform_login(request, user, email_verification='none')
-        # redirect to complete info page
-        raise ImmediateHttpResponse(redirect('/info/{pk}/'.format(pk=user.pk)))
+# @receiver(pre_social_login)
+# def link_to_local_user(sender, request, sociallogin, **kwargs):
+#     if sociallogin.account.provider == 'facebook':
+#         # save user data
+#         user = sociallogin.user
+#         user.email = sociallogin.account.extra_data['email']
+#         user.ign = sociallogin.account.extra_data['name']
+#         user.save()
+#         # perform login
+#         perform_login(request, user, email_verification='none')
+#         # redirect to complete info page
+#         raise ImmediateHttpResponse(redirect('/info/{pk}/'.format(pk=user.pk)))
