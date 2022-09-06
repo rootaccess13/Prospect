@@ -9,6 +9,7 @@ from django.dispatch import receiver
 from django.shortcuts import redirect
 from django.conf import settings
 import json
+from allauth.account.signals import user_signed_up
 
 
 class MyAccountAdapter(DefaultAccountAdapter):
@@ -24,17 +25,6 @@ class MyAccountAdapter(DefaultAccountAdapter):
         path = "/"
         print("Signed In : " + request.user.ign)
         return path
-
-    def user_signed_up(self, request, user, sociallogin):
-        if sociallogin:
-            if sociallogin.account.provider == 'facebook':
-                user.ign = sociallogin.account.extra_data['name']
-                user.email = sociallogin.account.extra_data['email']
-                user.save()
-            elif sociallogin.account.provider == 'google':
-                user.ign = sociallogin.account.extra_data['name']
-                user.email = sociallogin.account.extra_data['email']
-                user.save()
 
 
 class MySocialAccountAdapter(DefaultSocialAccountAdapter):
@@ -81,3 +71,16 @@ def link_to_local_user(sender, request, sociallogin, **kwargs):
 
         # redirect to signup page
         raise ImmediateHttpResponse(redirect('/'))
+
+
+@receiver(user_signed_up)
+def user_signed_up(self, request, user, sociallogin):
+    if sociallogin:
+        if sociallogin.account.provider == 'facebook':
+            user.ign = sociallogin.account.extra_data['name']
+            user.email = sociallogin.account.extra_data['email']
+            user.save()
+        elif sociallogin.account.provider == 'google':
+            user.ign = sociallogin.account.extra_data['name']
+            user.email = sociallogin.account.extra_data['email']
+            user.save()
