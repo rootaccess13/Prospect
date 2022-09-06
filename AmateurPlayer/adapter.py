@@ -49,7 +49,11 @@ def link_to_local_user(sender, request, sociallogin, **kwargs):
             try:
                 user = get_user_model().objects.get(email=email)
                 sociallogin.connect(request, user)
+                perform_login(request, user, email_verification='none')
+                raise ImmediateHttpResponse(
+                    redirect(settings.LOGIN_REDIRECT_URL))
             except get_user_model().DoesNotExist:
+                # user does not exist, continue with signup
                 pass
 
     if sociallogin.account.provider == 'google':
