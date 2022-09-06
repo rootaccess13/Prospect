@@ -50,6 +50,18 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
         print("Signed In : " + request.user.ign)
         return path
 
+    def populate_user(self, request, sociallogin, data):
+        user = sociallogin.user
+        if user.email:
+            return
+        email = data.get('email')
+        if email:
+            user.email = email
+            return
+        user.email = data.get('username') + '@gmail.com'
+
+        return super().populate_user(request, sociallogin, data)
+
 
 @receiver(user_signed_up)
 def user_signed_up_(request, user, **kwargs):
