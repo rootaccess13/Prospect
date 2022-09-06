@@ -37,13 +37,15 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             request, sociallogin)
         user.ign = sociallogin.account.extra_data['name']
         user.save()
-        return user
+        # redirect to the complete profile page
+        return redirect('/info/{pk}/'.format(pk=user.pk))
 
     def save_user(self, request, sociallogin, form=None):
-        user = super(MySocialAccountAdapter, self).save_user(
-            request, sociallogin, form)
-        user.ign = sociallogin.account.extra_data['name']
-        user.save()
+        user = sociallogin.user
+        if not user.pk:
+            user.save()
+        else:
+            user.save(update_fields=['last_login'])
         return user
 
     def pre_social_login(self, request, sociallogin):
