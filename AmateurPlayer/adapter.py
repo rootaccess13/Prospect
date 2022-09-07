@@ -56,6 +56,8 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             # perform_login(request, user, email_verification='optional')
             # raise ImmediateHttpResponse(
             #     redirect('/info/{pk}/'.format(pk=user.pk)))
+            user.ign = user.email.split('@')[0]
+            user.email = user.email
             user.save()
             perform_login(request, user, email_verification='optional')
             raise ImmediateHttpResponse(
