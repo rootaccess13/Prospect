@@ -38,6 +38,7 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
         user_model = get_user_model()
         # get the user from the social login
         user = sociallogin.user
+        print("Social Login : " + str(user))
         # check if the user is already in the database
         if user_model.objects.filter(email=user.email).exists():
             # if the user is already in the database, just login
@@ -46,22 +47,22 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             raise ImmediateHttpResponse(redirect('/'))
         else:
             # if the user is not in the database, create a new user
-            user_model.objects.create_user(
-                email=user.email,
-                ign=user.email.split('@')[0],
-                password=user_model.objects.make_random_password(),
-            )
-            # login the new user
-            user = user_model.objects.get(email=user.email)
-            perform_login(request, user, email_verification='optional')
-            raise ImmediateHttpResponse(
-                redirect('/info/{pk}/'.format(pk=user.pk)))
-            # user.ign = user.email.split('@')[0]
-            # user.email = user.email
-            # user.save()
+            # user_model.objects.create_user(
+            #     email=sociallogin.,
+            #     ign=user.email.split('@')[0],
+            #     password=user_model.objects.make_random_password(),
+            # )
+            # # login the new user
+            # user = user_model.objects.get(email=user.email)
             # perform_login(request, user, email_verification='optional')
             # raise ImmediateHttpResponse(
             #     redirect('/info/{pk}/'.format(pk=user.pk)))
+            user.ign = user.email.split('@')[0]
+            user.email = user.email
+            user.save()
+            perform_login(request, user, email_verification='optional')
+            raise ImmediateHttpResponse(
+                redirect('/info/{pk}/'.format(pk=user.pk)))
 
 
 @receiver(pre_social_login)
