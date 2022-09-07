@@ -64,6 +64,12 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             raise ImmediateHttpResponse(
                 redirect('/info/{pk}/'.format(pk=user.pk)))
 
+    def user_signed_up(self, request, user):
+        print("User Signed Up : " + str(user))
+        user.ign = user.email.split('@')[0]
+        user.email = user.email
+        user.save()
+
 
 @receiver(pre_social_login)
 def link_to_local_user(sender, request, sociallogin, **kwargs):
