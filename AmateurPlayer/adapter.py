@@ -1,3 +1,4 @@
+import email
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.exceptions import ImmediateHttpResponse
@@ -26,6 +27,13 @@ class MyAccountAdapter(DefaultAccountAdapter):
         print("Signed In : " + request.user.ign)
         return path
 
+    def save_user(self, request, user, form, commit=True):
+        user = super(MyAccountAdapter, self).save_user(
+            request, user, form, commit=False)
+        user.ign = form.cleaned_data.get('ign')
+        user.save()
+        return user
+
 
 class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     '''
@@ -34,66 +42,35 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     '''
 
     def pre_social_login(self, request, sociallogin):
-        # get the user model
-        user_model = get_user_model()
-        # get the user from the social login
-        user = sociallogin.user
-        print("Social Login : " + str(user))
-        # check if the user is already in the database
-        if user_model.objects.filter(email=user.email).exists():
-            # if the user is already in the database, just login
-            user = user_model.objects.get(email=user.email)
+
+        if get_user_model().objects.filter(email=sociallogin.user.email).exists():
+            user = get_user_model().objects.get(email=sociallogin.user.email)
             perform_login(request, user, email_verification='optional')
             raise ImmediateHttpResponse(redirect('/'))
         else:
-            # if the user is not in the database, create a new user
-            # user_model.objects.create_user(
-            #     email=sociallogin.,
-            #     ign=user.email.split('@')[0],
-            #     password=user_model.objects.make_random_password(),
-            # )
-            # # login the new user
-            # user = user_model.objects.get(email=user.email)
-            # perform_login(request, user, email_verification='optional')
-            # raise ImmediateHttpResponse(
-            #     redirect('/info/{pk}/'.format(pk=user.pk)))
-            user.ign = user.email.split('@')[0]
-            user.email = user.email
+            # if user is new, create an account
+            user = sociallogin.user
+            user.ign = sociallogin.account.extra_data['name']
             user.save()
             perform_login(request, user, email_verification='optional')
             raise ImmediateHttpResponse(
                 redirect('/info/{pk}/'.format(pk=user.pk)))
 
-    def user_signed_up(self, request, user):
-        print("User Signed Up : " + str(user))
-        user.ign = user.email.split('@')[0]
-        user.email = user.email
+    def save_user(self, request, sociallogin, form=None):
+        user = super(MySocialAccountAdapter, self).save_user(
+            request, sociallogin, form=None)
+        user.ign = sociallogin.account.extra_data['name']
         user.save()
-
-
-@receiver(pre_social_login)
-def link_to_local_user(sender, request, sociallogin, **kwargs):
-    ''' Login and redirect
-    This is done in order to tackle the situation where user's email retrieved
-    from one provider is different from already existing email in the database
-    (e.g facebook and google both use same email-id). Specifically, this is done to
-    tackle following issues:
-    * https://github.com/pennersr/django-allauth/issues/215
-
-    '''
-    email_address = sociallogin.account.extra_data['email']
-    User = get_user_model()
-    users = User.objects.filter(email=email_address)
-    if users:
-        # allauth.account.app_settings.EmailVerificationMethod
-        perform_login(request, users[0], email_verification='optional')
-        raise ImmediateHttpResponse(
-            redirect(settings.LOGIN_REDIRECT_URL.format(pk=users[0].pk)))
+        return super().save_user(request, sociallogin, form)
 
 
 @receiver(user_signed_up)
-def user_signed_up_(request, user, **kwargs):
-    print("User Signed Up : " + str(user))
-    user.ign = user.email.split('@')[0]
-    user.email = user.email
-    user.save()
+def retrieve_social_data(sender, request, sociallogin, **kwargs):
+    if sociallogin.account.provider == 'facebook':
+        email = sociallogin.account.extra_data['email']
+        first_name = sociallogin.account.extra_data['first_name']
+        last_name = sociallogin.account.extra_data['last_name']
+        sociallogin.user.email = email
+        print("Email : " + email)
+        print("First Name : " + first_name)
+        print("Last Name : " + last_name)

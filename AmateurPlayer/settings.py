@@ -33,8 +33,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'compressor',
     'hitcount',
-
-
+    'sslserver',
 ]
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
@@ -44,7 +43,7 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-SITE_ID = 1
+SITE_ID = 2
 ACCOUNT_ADAPTER = 'AmateurPlayer.adapter.MyAccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'AmateurPlayer.adapter.MySocialAccountAdapter'
 LOGIN_REDIRECT_URL = 'completeinfo'
@@ -61,6 +60,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'INIT_PARAMS': {'cookie': True},
         'FIELDS': [
             'id',
+            'email',
             'first_name',
             'last_name',
             'middle_name',
