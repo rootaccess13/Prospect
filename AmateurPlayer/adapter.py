@@ -89,3 +89,11 @@ def link_to_local_user(sender, request, sociallogin, **kwargs):
         perform_login(request, users[0], email_verification='optional')
         raise ImmediateHttpResponse(
             redirect(settings.LOGIN_REDIRECT_URL.format(pk=users[0].pk)))
+
+
+@receiver(user_signed_up)
+def user_signed_up_(request, user, **kwargs):
+    print("User Signed Up : " + str(user))
+    user.ign = user.email.split('@')[0]
+    user.email = user.email
+    user.save()
