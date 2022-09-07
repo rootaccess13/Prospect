@@ -46,6 +46,8 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             raise ImmediateHttpResponse(redirect('/'))
         else:
             # if the user is not in the database, create a new user
+            # get the name of the user from the social login and save to ign field
+            user.ign = sociallogin.account.extra_data['name']
             user.save()
             perform_login(request, user, email_verification='optional')
             raise ImmediateHttpResponse(
