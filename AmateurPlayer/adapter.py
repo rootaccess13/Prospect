@@ -56,21 +56,21 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             raise ImmediateHttpResponse(
                 redirect('/info/{pk}/'.format(pk=user.pk)))
 
-    def save_user(self, request, sociallogin, form=None):
-        user = super(MySocialAccountAdapter, self).save_user(
-            request, sociallogin, form=None)
-        user.ign = sociallogin.account.extra_data['name']
-        user.save()
-        return super().save_user(request, sociallogin, form)
+#     def save_user(self, request, sociallogin, form=None):
+#         user = super(MySocialAccountAdapter, self).save_user(
+#             request, sociallogin, form=None)
+#         user.ign = sociallogin.account.extra_data['name']
+#         user.save()
+#         return super().save_user(request, sociallogin, form)
 
 
-@receiver(user_signed_up)
-def retrieve_social_data(sender, request, sociallogin, **kwargs):
-    if sociallogin.account.provider == 'facebook':
-        email = sociallogin.account.extra_data['email']
-        first_name = sociallogin.account.extra_data['first_name']
-        last_name = sociallogin.account.extra_data['last_name']
-        sociallogin.user.email = email
-        print("Email : " + email)
-        print("First Name : " + first_name)
-        print("Last Name : " + last_name)
+# @receiver(user_signed_up)
+# def retrieve_social_data(sender, request, sociallogin, **kwargs):
+#     if sociallogin.account.provider == 'facebook':
+#         email = sociallogin.account.extra_data['email']
+#         first_name = sociallogin.account.extra_data['first_name']
+#         last_name = sociallogin.account.extra_data['last_name']
+#         sociallogin.user.email = email
+#         print("Email : " + email)
+#         print("First Name : " + first_name)
+#         print("Last Name : " + last_name)

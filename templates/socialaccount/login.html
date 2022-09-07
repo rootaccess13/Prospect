@@ -1,0 +1,28 @@
+{% extends 'index/_socialaccount_base.html' %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+<div class="relative justify-center content-center">
+    <div class="flex justify-center">
+        <a href="#" class="block p-6 max-w-xl w-full bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+            {% if process == "connect" %}
+            <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">{% blocktrans with provider.name as provider %}Connect {{ provider }}{% endblocktrans %}</h1>
+    
+            <p>{% blocktrans with provider.name as provider %}You are about to connect a new third party account from {{ provider }}.{% endblocktrans %}</p>
+            {% else %}
+            <h1 class="mb-4 text-md font-extrabold tracking-tight leading-none text-gray-900 md:text-xl lg:text-md dark:text-white">{% blocktrans with provider.name as provider %}Sign In Via {{ provider }}{% endblocktrans %}</h1>
+    
+            <p class="mb-3 font-light text-gray-500 dark:text-gray-400">{% blocktrans with provider.name as provider %}You are about to sign in using a third party account from <span class="underline font-bold"> {{ provider }} </span>.{% endblocktrans %}</p>
+            {% endif %}
+    
+            <form class="mt-4" method="post">
+            {% csrf_token %}
+            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{% blocktrans with provider.name as provider %}Continue with {{provider}} {% endblocktrans %}</button>
+            </form>
+        </a>
+    </div>
+
+  </div>
+{% endblock %}
