@@ -48,9 +48,8 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             # if the user is not in the database, create a new user
             user_model.objects.create_user(
                 email=user.email,
-                username=user.email,
-                password=user_model.objects.make_random_password(),
                 ign=user.email.split('@')[0],
+                password=user_model.objects.make_random_password(),
             )
             # login the new user
             user = user_model.objects.get(email=user.email)
