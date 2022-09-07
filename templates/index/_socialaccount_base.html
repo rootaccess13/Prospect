@@ -179,5 +179,15 @@
 
 </script>
 
+<script>
+    document.onreadystatechange = () => {
+        const loader = document.getElementById('skeleton');
+        if (document.readyState === 'complete') {
+            loader.classList.add('hidden');
+        }else{
+            loader.classList.remove('hidden');
+        }
+    };
+</script>
 </body>
 </html>

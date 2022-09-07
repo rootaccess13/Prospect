@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'accounts.apps.AccountsConfig',
     'compressor',
-    'hitcount'
+    'hitcount',
+    'sslserver',
 ]
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",

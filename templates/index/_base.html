@@ -572,6 +572,23 @@
 
 
 </script>
-
+<script>
+    var loader = document.getElementById('skeleton');
+    var content = document.getElementById('valorant');
+    var main_content = document.getElementById('main-content');
+    document.onreadystatechange = () => {
+        
+        if (document.readyState === 'complete') {
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                main_content.classList.remove('hidden');
+            }, 1000);
+            
+        }else{
+            loader.classList.remove('hidden');
+            main_content.classList.add('hidden');
+        }
+    };
+</script>
 </body>
 </html>
