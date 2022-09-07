@@ -3031,6 +3031,10 @@ input:checked + .toggle-bg {
     justify-content: flex-start;
   }
 
+  .sm\:justify-center {
+    justify-content: center;
+  }
+
   .sm\:gap-2 {
     gap: 0.5rem;
   }
