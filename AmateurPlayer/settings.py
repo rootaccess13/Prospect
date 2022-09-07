@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'compressor',
     'hitcount',
-    'sslserver',
 ]
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
