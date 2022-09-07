@@ -34,7 +34,22 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     '''
 
     def pre_social_login(self, request, sociallogin):
-        pass    # TODOFuture: To perform some actions right after successful login
+        # get the user model
+        user_model = get_user_model()
+        # get the user from the social login
+        user = sociallogin.user
+        # check if the user is already in the database
+        if user_model.objects.filter(email=user.email).exists():
+            # if the user is already in the database, just login
+            user = user_model.objects.get(email=user.email)
+            perform_login(request, user, email_verification='optional')
+            raise ImmediateHttpResponse(redirect('/'))
+        else:
+            # if the user is not in the database, create a new user
+            user.save()
+            perform_login(request, user, email_verification='optional')
+            raise ImmediateHttpResponse(
+                redirect('/info/{pk}/'.format(pk=user.pk)))
 
 
 @receiver(pre_social_login)
